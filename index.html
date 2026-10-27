@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phần Mềm Tính Chỉ Số Cơ Thể (BMI) - Phiên Bản V134 AI</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #F0F4F8;
+      --bg-card: #FFFFFF;
+      --text-main: #102A43;
+      --text-sub: #486581;
+      --primary: #1D4ED8;
+      --primary-hover: #1E40AF;
+      --header-bg: #1E3A8A;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    .input-field {
+      font-size: 1.18rem;
+      font-weight: 600;
+      color: #102A43;
+      background-color: #F8FAFC;
+      border: 2px solid #94A3B8;
+      border-radius: 0.75rem;
+      padding: 0.7rem 1rem;
+      width: 100%;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .input-field-left {
+      text-align: left;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #1D4ED8;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15);
+    }
+    .input-error {
+      border-color: #DC2626 !important;
+      background-color: #FEF2F2 !important;
+    }
+    .gender-option {
+      cursor: pointer;
+      border: 2px solid #CBD5E1;
+      background-color: #F8FAFC;
+      border-radius: 0.75rem;
+      padding: 0.7rem 1rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #334155;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    .gender-option:hover {
+      border-color: #64748B;
+      background-color: #F1F5F9;
+    }
+    .gender-option.active-male {
+      border-color: #1D4ED8;
+      background-color: #DBEAFE;
+      color: #1E3A8A;
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+    }
+    .gender-option.active-female {
+      border-color: #BE185D;
+      background-color: #FCE7F3;
+      color: #831843;
+      box-shadow: 0 0 0 3px rgba(190, 24, 93, 0.15);
+    }
+    .scale-marker {
+      transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tab-btn {
+      cursor: pointer;
+      border: 2px solid #CBD5E1;
+      background-color: #F8FAFC;
+      color: #334155;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 0.65rem;
+      transition: all 0.18s ease;
+    }
+    .tab-btn:hover {
+      border-color: #64748B;
+      background-color: #F1F5F9;
+    }
+    .tab-btn.active-tab {
+      border-color: #1D4ED8;
+      background-color: #1D4ED8;
+      color: #FFFFFF;
+    }
+    .step-badge {
+      transition: all 0.25s ease;
+    }
+    .step-badge.active-step {
+      background-color: #DBEAFE;
+      border-color: #1D4ED8;
+      color: #1E3A8A;
+    }
+    .step-badge.done-step {
+      background-color: #DCFCE7;
+      border-color: #16A34A;
+      color: #14532D;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-5 px-3 sm:px-6 flex flex-col items-center">
+
+  <!-- Khung chính mở rộng dễ nhìn cho người trung niên -->
+  <main class="w-full max-w-4xl bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+    
+    <!-- 1. Tiêu đề trên cùng + Phiên bản V134 -->
+    <header class="bg-[#1E3A8A] text-white px-5 sm:px-7 py-5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="text-center md:text-left">
+          <div class="inline-flex items-center gap-2 bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm px-3 py-1 rounded-full mb-2 shadow-sm">
+            <span>🚀 PHIÊN BẢN V134 PRO</span>
+            <span>•</span>
+            <span>AI TỰ ĐỘNG &amp; TỰ HỌC THÍCH ỨNG</span>
+          </div>
+          <h1 class="text-2xl sm:text-[27px] font-extrabold tracking-tight">
+            HỆ THỐNG TƯ VẤN CHỈ SỐ CƠ THỂ (BMI) &amp; QUẢN LÝ HỒ SƠ
+          </h1>
+          <p class="mt-1 text-base sm:text-[17px] text-blue-100 font-medium">
+            Tối ưu chữ to, rõ ràng cho tuổi trung niên • Hỗ trợ DeepSeek AI (Ưu tiên) &amp; Gemini AI
+          </p>
+        </div>
+
+        <!-- Nút Bật/Tắt Tự Động Chạy Mọi Bước & Nút Mở Cài Đặt AI -->
+        <div class="flex flex-wrap items-center justify-center md:justify-end gap-2.5">
+          <button
+            type="button"
+            id="nutCheDoTuDong"
+            class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-2 cursor-pointer transition border-2 border-white/30"
+            aria-pressed="true"
+          >
+            <span id="bieuTuongTuDong">⚡</span>
+            <span id="nhanCheDoTuDong">AI Tự Động Mọi Bước: ĐANG BẬT</span>
+          </button>
+          <button
+            type="button"
+            id="nutMoCaiDatAI"
+            class="bg-blue-800 hover:bg-blue-700 text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-2 cursor-pointer transition border border-blue-400"
+          >
+            <span>🔑 Cài đặt API (DeepSeek / Gemini)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thanh tiến trình 5 bước tự động của AI V134 -->
+      <div class="mt-4 pt-3 border-t border-blue-800 grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs sm:text-[13px] font-bold">
+        <div id="buoc1" class="step-badge bg-blue-900/70 border border-blue-700 text-blue-100 rounded-lg px-2.5 py-1.5 text-center">
+          1. Chuẩn hóa hồ sơ
+        </div>
+        <div id="buoc2" class="step-badge bg-blue-900/70 border border-blue-700 text-blue-100 rounded-lg px-2.5 py-1.5 text-center">
+          2. Tính BMI &amp; Mỡ
+        </div>
+        <div id="buoc3" class="step-badge bg-blue-900/70 border border-blue-700 text-blue-100 rounded-lg px-2.5 py-1.5 text-center">
+          3. Lập phác đồ 3 mục
+        </div>
+        <div id="buoc4" class="step-badge bg-blue-900/70 border border-blue-700 text-blue-100 rounded-lg px-2.5 py-1.5 text-center">
+          4. AI Nghiên cứu sâu
+        </div>
+        <div id="buoc5" class="step-badge bg-blue-900/70 border border-blue-700 text-blue-100 rounded-lg px-2.5 py-1.5 text-center col-span-2 sm:col-span-1">
+          5. Tự lưu &amp; Tự học
+        </div>
+      </div>
+    </header>
+
+    <div class="p-4 sm:p-7 space-y-6 bg-[#F0F4F8]">
+
+      <!-- Hộp thông báo trạng thái nhanh (Toast thân thiện) -->
+      <div id="hopThongBaoNhanh" class="hidden bg-emerald-50 border-2 border-emerald-600 rounded-xl p-3.5 text-emerald-950 font-bold text-[16px] flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2.5">
+          <span>✅</span>
+          <span id="noiDungThongBaoNhanh">Đã thực hiện thành công!</span>
+        </div>
+        <button type="button" id="nutDongThongBaoNhanh" class="text-emerald-800 hover:text-emerald-950 px-2 py-0.5 font-extrabold">
+          Đóng
+        </button>
+      </div>
+
+      <!-- Hộp cảnh báo lỗi tiếng Việt dễ nhìn (ẩn mặc định) -->
+      <div id="hopCanhBao" role="alert" class="hidden bg-red-50 border-2 border-red-500 rounded-xl p-4 text-red-900 shadow-sm">
+        <div class="flex items-start gap-3">
+          <svg class="w-7 h-7 text-red-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+          </svg>
+          <div class="flex-1">
+            <h2 id="tieuDeLoi" class="text-lg font-bold text-red-800">Thiếu thông tin</h2>
+            <p id="noiDungLoi" class="text-base font-medium text-red-700 mt-0.5 whitespace-pre-line"></p>
+          </div>
+          <button type="button" id="nutDongCanhBao" class="text-red-600 hover:text-red-900 font-bold text-base px-2 py-1 rounded">
+            Đóng
+          </button>
+        </div>
+      </div>
+
+      <!-- Khung Cài Đặt API Key DeepSeek (Ưu tiên) & Gemini (ẩn/hiện gọn gàng) -->
+      <section id="khungCaiDatAI" class="hidden bg-indigo-50 border-2 border-indigo-300 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-indigo-200 pb-3">
+          <div>
+            <h2 class="text-[19px] font-extrabold text-indigo-950">
+              🤖 Cấu Hình Trí Tuệ Nhân Tạo V134 (Ưu tiên DeepSeek &amp; Gemini)
+            </h2>
+            <p class="text-[15px] text-indigo-800 font-medium">
+              Hệ thống ưu tiên gọi DeepSeek API trước; nếu trống hoặc lỗi mạng sẽ tự động chuyển sang Gemini API và Trí tuệ nhân tạo Tự Học Nội Bộ V134.
+            </p>
+          </div>
+          <button type="button" id="nutDongCaiDatAI" class="bg-indigo-200 hover:bg-indigo-300 text-indigo-950 font-bold px-3 py-1.5 rounded-lg text-[15px]">
+            Thu gọn ✖
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="oDeepSeekKey" class="block text-[16px] font-bold text-indigo-950 mb-1">
+              1. DeepSeek API Key (Ưu tiên số 1):
+            </label>
+            <input
+              type="password"
+              id="oDeepSeekKey"
+              placeholder="Nhập sk-... (DeepSeek API Key)"
+              class="input-field input-field-left text-base bg-white"
+              autocomplete="off"
+            />
+            <p class="text-xs text-indigo-700 mt-1 font-medium">
+              Model sử dụng: <code>deepseek-chat</code> (https://api.deepseek.com)
+            </p>
+          </div>
+
+          <div>
+            <label for="oGeminiKey" class="block text-[16px] font-bold text-indigo-950 mb-1">
+              2. Google Gemini API Key (Dự phòng tự động):
+            </label>
+            <input
+              type="password"
+              id="oGeminiKey"
+              placeholder="Nhập AIza... (Gemini API Key)"
+              class="input-field input-field-left text-base bg-white"
+              autocomplete="off"
+            />
+            <p class="text-xs text-indigo-700 mt-1 font-medium">
+              Model sử dụng: <code>gemini-2.5-flash</code> (Google Generative Language API)
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <div id="trangThaiKetNoiAI" class="text-[15px] font-bold text-indigo-900">
+            Trạng thái hiện tại: Đang dùng AI Tự Học V134 Nội Bộ (Sẵn sàng kết nối DeepSeek / Gemini)
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              id="nutHienAnKey"
+              class="bg-white hover:bg-slate-100 text-indigo-900 border border-indigo-300 font-bold px-4 py-2 rounded-xl text-[15px] cursor-pointer"
+            >
+              👁️ Hiện/Ẩn mã Key
+            </button>
+            <button
+              type="button"
+              id="nutLuuAPI"
+              class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold px-5 py-2 rounded-xl text-[15px] shadow cursor-pointer"
+            >
+              💾 Lưu Cấu Hình API
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Thẻ nhập thông tin người được tư vấn -->
+      <section class="bg-white rounded-xl p-5 sm:p-6 border border-slate-300 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <h2 class="text-[20px] font-extrabold text-[#1E3A8A]">
+              📝 THÔNG TIN NGƯỜI ĐƯỢC TƯ VẤN
+            </h2>
+            <p class="text-[15px] text-[#486581] font-medium">
+              Điền thông tin tới đâu, AI V134 tự động chuẩn hóa và phân tích tới đó
+            </p>
+          </div>
+          <button
+            type="button"
+            id="nutMauThu"
+            class="bg-blue-50 hover:bg-blue-100 text-[#1D4ED8] border border-blue-300 font-bold text-[15px] px-3.5 py-2 rounded-xl cursor-pointer transition self-start sm:self-auto"
+          >
+            ✨ Điền mẫu thử nhanh (Tuổi trung niên)
+          </button>
+        </div>
+
+        <!-- Hàng Thông tin cá nhân: Họ và tên, Số điện thoại, Địa chỉ -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <!-- Họ và tên -->
+          <div>
+            <label for="oHoTen" class="block text-[17px] font-bold text-[#102A43]">
+              Họ và tên người được tư vấn:
+            </label>
+            <p class="text-[14px] italic text-[#486581] mb-1.5">
+              Ví dụ: Nguyễn Văn An
+            </p>
+            <input
+              type="text"
+              id="oHoTen"
+              placeholder="Nhập họ và tên..."
+              class="input-field input-field-left bg-white"
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Số điện thoại -->
+          <div>
+            <label for="oSoDienThoai" class="block text-[17px] font-bold text-[#102A43]">
+              Số điện thoại liên hệ:
+            </label>
+            <p class="text-[14px] italic text-[#486581] mb-1.5">
+              Ví dụ: 0912345678
+            </p>
+            <input
+              type="tel"
+              id="oSoDienThoai"
+              inputmode="tel"
+              placeholder="Nhập số điện thoại..."
+              class="input-field input-field-left bg-white"
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Địa chỉ -->
+          <div>
+            <label for="oDiaChi" class="block text-[17px] font-bold text-[#102A43]">
+              Địa chỉ nơi ở:
+            </label>
+            <p class="text-[14px] italic text-[#486581] mb-1.5">
+              Ví dụ: Xuân Giang, Tuyên Quang
+            </p>
+            <input
+              type="text"
+              id="oDiaChi"
+              placeholder="Nhập thôn/xóm, xã/phường, tỉnh..."
+              class="input-field input-field-left bg-white"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Hàng 1: Giới tính & Độ tuổi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          
+          <!-- Cột 1: Giới tính -->
+          <div>
+            <label class="block text-[18px] font-bold text-[#102A43]">
+              1. Chọn giới tính:
+            </label>
+            <p class="text-[15px] italic text-[#486581] mb-2">
+              Nhấn chọn Nam hoặc Nữ
+            </p>
+            <div id="khungGioiTinh" class="grid grid-cols-2 gap-3 p-1 rounded-xl">
+              <button type="button" id="nutChonNam" class="gender-option" aria-pressed="false">
+                <span>👨</span>
+                <span>Nam</span>
+              </button>
+              <button type="button" id="nutChonNu" class="gender-option" aria-pressed="false">
+                <span>👩</span>
+                <span>Nữ</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cột 2: Độ tuổi -->
+          <div>
+            <label for="oTuoi" class="block text-[18px] font-bold text-[#102A43]">
+              2. Nhập độ tuổi (năm):
+            </label>
+            <p class="text-[15px] italic text-[#486581] mb-2">
+              Ví dụ: 48
+            </p>
+            <input
+              type="text"
+              id="oTuoi"
+              inputmode="numeric"
+              placeholder="Ví dụ: 48"
+              class="input-field"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Hàng 2 & 3: Chiều cao & Cân nặng đặt cạnh nhau trên màn hình rộng -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="oChieuCao" class="block text-[18px] font-bold text-[#102A43]">
+              3. Nhập chiều cao (cm):
+            </label>
+            <p class="text-[15px] italic text-[#486581] mb-2">
+              Ví dụ: 165 (hoặc 1,65m đều được)
+            </p>
+            <input
+              type="text"
+              id="oChieuCao"
+              inputmode="decimal"
+              placeholder="Ví dụ: 165"
+              class="input-field"
+              autocomplete="off"
+            />
+          </div>
+
+          <div>
+            <label for="oCanNang" class="block text-[18px] font-bold text-[#102A43]">
+              4. Nhập cân nặng (kg):
+            </label>
+            <p class="text-[15px] italic text-[#486581] mb-2">
+              Ví dụ: 62 hoặc 62,5
+            </p>
+            <input
+              type="text"
+              id="oCanNang"
+              inputmode="decimal"
+              placeholder="Ví dụ: 62"
+              class="input-field"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Hàng 4: Nút bấm lớn dễ thao tác -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <button
+            type="button"
+            id="nutTinhBMI"
+            class="flex-1 bg-[#1D4ED8] hover:bg-[#1E40AF] active:bg-[#1E3A8A] text-white font-bold text-[18px] py-3.5 px-6 rounded-xl shadow transition cursor-pointer"
+          >
+            TÍNH KẾT QUẢ BMI
+          </button>
+          <button
+            type="button"
+            id="nutLuuHoSoRieng"
+            class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[17px] py-3.5 px-5 rounded-xl shadow transition cursor-pointer"
+          >
+            ➕ Lưu Vào Danh Sách
+          </button>
+          <button
+            type="button"
+            id="nutNhapLai"
+            class="sm:w-36 bg-[#64748B] hover:bg-[#475569] active:bg-[#334155] text-white font-bold text-[17px] py-3.5 px-4 rounded-xl shadow transition cursor-pointer"
+          >
+            NHẬP LẠI
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. Khung hiển thị kết quả & Phân tích AI V134 -->
+      <section id="theKetQua" class="bg-white rounded-xl p-5 sm:p-6 border border-slate-300 shadow-sm text-center space-y-4">
+        <div id="nhanThongTinKhach" class="hidden text-[17px] font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg py-2 px-4">
+          Hồ sơ tư vấn: --
+        </div>
+
+        <div id="nhanSoBMI" class="text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+          Chỉ số BMI: --
+        </div>
+
+        <div id="nhanPhanLoai" class="text-[18px] font-bold text-[#486581]">
+          Mời bạn nhập thông tin người được tư vấn (chế độ Tự động sẽ chạy ngay khi đủ số liệu)
+        </div>
+
+        <!-- Thanh thước đo trực quan (hiện khi có kết quả) -->
+        <div id="khungThuocDo" class="hidden pt-3 pb-1">
+          <div class="relative h-4 w-full rounded-full overflow-hidden flex">
+            <div class="w-1/4 bg-amber-500" title="Dưới 18.5: Gầy"></div>
+            <div class="w-1/4 bg-green-600" title="18.5 - 24.9: Bình thường"></div>
+            <div class="w-1/4 bg-orange-600" title="25.0 - 29.9: Thừa cân"></div>
+            <div class="w-1/4 bg-red-600" title="Từ 30 trở lên: Béo phì"></div>
+          </div>
+          <div class="relative h-5 w-full mt-1">
+            <div id="kimChiBMI" class="scale-marker absolute -top-1 -translate-x-1/2 flex flex-col items-center" style="left: 50%;">
+              <div class="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[9px] border-b-slate-900"></div>
+              <span class="text-xs font-extrabold bg-slate-900 text-white px-1.5 py-0.5 rounded mt-0.5">Vị trí</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 text-[13px] font-semibold text-slate-600 mt-3">
+            <span>Gầy<br/>(&lt;18.5)</span>
+            <span>Bình thường<br/>(18.5–24.9)</span>
+            <span>Thừa cân<br/>(25–29.9)</span>
+            <span>Béo phì<br/>(≥30)</span>
+          </div>
+        </div>
+
+        <!-- Lời khuyên tổng quan -->
+        <div id="nhanLoiKhuyen" class="hidden text-left bg-slate-50 border border-slate-200 rounded-xl p-4 text-[16px] text-[#102A43] space-y-2">
+          <p id="doanLoiKhuyenChinh" class="font-semibold text-[17px]"></p>
+          <ul id="danhSachChiTiet" class="list-disc list-inside space-y-1.5 text-[#102A43] font-medium"></ul>
+        </div>
+
+        <!-- Phần Tư Vấn Chuyên Sâu: Dinh dưỡng, Luyện tập, Học tập & Nghỉ ngơi + AI Nghiên Cứu Sâu -->
+        <div id="khungTuVanChuyenSau" class="hidden text-left pt-3 space-y-4 border-t border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h3 class="text-[19px] font-extrabold text-[#1E3A8A]">
+              📋 CẨM NANG TƯ VẤN &amp; NGHIÊN CỨU SÂU V134
+            </h3>
+            <button
+              type="button"
+              id="nutPhanTichAI"
+              class="bg-purple-700 hover:bg-purple-800 text-white font-bold text-[15px] px-4 py-2 rounded-xl shadow cursor-pointer transition"
+            >
+              🧠 Chạy AI Nghiên Cứu Sâu (DeepSeek / Gemini)
+            </button>
+          </div>
+
+          <!-- Bộ lọc xem nhanh các mục tư vấn -->
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Chọn mục tư vấn">
+            <button type="button" id="tabTatCa" class="tab-btn active-tab">
+              Tất cả (3 mục)
+            </button>
+            <button type="button" id="tabDinhDuong" class="tab-btn">
+              🥗 Dinh dưỡng
+            </button>
+            <button type="button" id="tabLuyenTap" class="tab-btn">
+              🏃 Luyện tập
+            </button>
+            <button type="button" id="tabNghiNgoi" class="tab-btn">
+              📚 Học tập &amp; Nghỉ ngơi
+            </button>
+            <button type="button" id="tabAIChuyenSau" class="tab-btn">
+              🤖 AI Nghiên Cứu Sâu V134
+            </button>
+          </div>
+
+          <!-- Thẻ 1: Tư vấn dinh dưỡng -->
+          <div id="theTuVanDinhDuong" class="bg-emerald-50/70 border-2 border-emerald-200 rounded-xl p-4 sm:p-5 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🥗</span>
+              <h4 class="text-[18px] font-bold text-emerald-950">
+                1. Tư Vấn Dinh Dưỡng &amp; Ăn Uống Hằng Ngày
+              </h4>
+            </div>
+            <p id="tomTatDinhDuong" class="text-[16px] font-semibold text-emerald-900"></p>
+            <ul id="danhSachDinhDuong" class="list-disc list-inside space-y-1.5 text-[15.5px] text-slate-800 font-medium"></ul>
+          </div>
+
+          <!-- Thẻ 2: Chế độ luyện tập -->
+          <div id="theTuVanLuyenTap" class="bg-blue-50/70 border-2 border-blue-200 rounded-xl p-4 sm:p-5 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🏃</span>
+              <h4 class="text-[18px] font-bold text-blue-950">
+                2. Chế Độ Luyện Tập &amp; Vận Động Thể Chất
+              </h4>
+            </div>
+            <p id="tomTatLuyenTap" class="text-[16px] font-semibold text-blue-900"></p>
+            <ul id="danhSachLuyenTap" class="list-disc list-inside space-y-1.5 text-[15.5px] text-slate-800 font-medium"></ul>
+          </div>
+
+          <!-- Thẻ 3: Chế độ học tập, làm việc & nghỉ ngơi -->
+          <div id="theTuVanNghiNgoi" class="bg-amber-50/70 border-2 border-amber-200 rounded-xl p-4 sm:p-5 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">📚</span>
+              <h4 class="text-[18px] font-bold text-amber-950">
+                3. Chế Độ Học Tập, Làm Việc &amp; Nghỉ Ngơi
+              </h4>
+            </div>
+            <p id="tomTatNghiNgoi" class="text-[16px] font-semibold text-amber-900"></p>
+            <ul id="danhSachNghiNgoi" class="list-disc list-inside space-y-1.5 text-[15.5px] text-slate-800 font-medium"></ul>
+          </div>
+
+          <!-- Thẻ 4: Phân tích Nghiên Cứu Sâu từ AI (DeepSeek / Gemini / AI Tự Học V134) -->
+          <div id="theTuVanAI" class="bg-purple-50/80 border-2 border-purple-300 rounded-xl p-4 sm:p-5 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🧠</span>
+                <h4 class="text-[18px] font-bold text-purple-950">
+                  4. Báo Cáo Nghiên Cứu Sâu Từ AI V134
+                </h4>
+              </div>
+              <span id="nhanNguonAI" class="text-xs font-extrabold uppercase bg-purple-200 text-purple-950 px-3 py-1 rounded-full self-start sm:self-auto">
+                Nguồn: AI Tự Học V134
+              </span>
+            </div>
+
+            <div id="noiDungPhanTichAI" class="text-[16px] text-slate-900 font-medium whitespace-pre-line bg-white/90 p-4 rounded-xl border border-purple-200 leading-relaxed">
+              Đang tổng hợp phân tích chuyên sâu...
+            </div>
+
+            <!-- Khu vực dạy AI liên tục học từ kinh nghiệm thực tế của người tư vấn -->
+            <div class="bg-purple-100/70 rounded-xl p-3.5 border border-purple-200 space-y-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span class="text-[15px] font-bold text-purple-950">
+                  🌱 Bổ sung kinh nghiệm thực tế để AI V134 tự học &amp; tối ưu cho các ca sau:
+                </span>
+                <button
+                  type="button"
+                  id="nutDanhGiaTotAI"
+                  class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-3.5 py-1.5 rounded-lg cursor-pointer self-start sm:self-auto"
+                >
+                  👍 Phác đồ chuẩn xác (+1 Điểm Học Tập AI)
+                </button>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  id="oDayAI"
+                  placeholder="Nhập thêm kinh nghiệm tư vấn thực tế của bạn (ví dụ: Đau khớp gối nên uống thêm sữa hạt, kiêng măng...)"
+                  class="flex-1 bg-white border border-purple-300 rounded-lg px-3.5 py-2 text-[15px] font-medium text-slate-900"
+                />
+                <button
+                  type="button"
+                  id="nutDayAI"
+                  class="bg-purple-800 hover:bg-purple-900 text-white font-bold text-[15px] px-4 py-2 rounded-lg cursor-pointer shrink-0"
+                >
+                  ➕ Dạy AI Ghi Nhớ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. DANH SÁCH NGƯỜI ĐƯỢC TƯ VẤN & XUẤT FILE (EXCEL / CSV / HTML / JSON) -->
+      <section class="bg-white rounded-xl p-5 sm:p-6 border-2 border-blue-200 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-200 pb-3">
+          <div>
+            <h2 class="text-[20px] font-extrabold text-[#1E3A8A]">
+              🗂️ DANH SÁCH NGƯỜI ĐƯỢC TƯ VẤN (<span id="soLuongHoSo">0</span> người)
+            </h2>
+            <p class="text-[15px] text-[#486581] font-medium">
+              Lưu đầy đủ Họ tên, Số điện thoại, Địa chỉ, Chỉ số BMI và Phác đồ tư vấn để xuất file bất cứ lúc nào
+            </p>
+          </div>
+
+          <!-- Các nút Xuất File dễ nhìn cho người trung niên -->
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              id="nutXuatExcel"
+              class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>📊 Xuất File Excel (.CSV)</span>
+            </button>
+            <button
+              type="button"
+              id="nutXuatBaoCaoHTML"
+              class="bg-[#1D4ED8] hover:bg-[#1E40AF] text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>📄 Xuất Báo Cáo Đẹp (.HTML)</span>
+            </button>
+            <button
+              type="button"
+              id="nutXuatJSON"
+              class="bg-slate-700 hover:bg-slate-800 text-white font-bold text-[15px] px-3.5 py-2.5 rounded-xl shadow flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>💾 Sao Lưu (.JSON)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Thanh tìm kiếm khách hàng & xóa danh sách -->
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+          <input
+            type="text"
+            id="oTimKiemKhach"
+            placeholder="🔍 Tìm nhanh theo Họ tên, Số điện thoại hoặc Địa chỉ..."
+            class="flex-1 bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-2.5 text-[16px] font-medium text-slate-900"
+          />
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="nutXoaDanhSach"
+              class="bg-red-100 hover:bg-red-200 text-red-800 font-bold text-[15px] px-4 py-2.5 rounded-xl cursor-pointer transition"
+            >
+              🗑️ Xóa toàn bộ danh sách
+            </button>
+          </div>
+        </div>
+
+        <!-- Hộp xác nhận xóa danh sách (thay cho confirm() của trình duyệt) -->
+        <div id="hopXacNhanXoa" class="hidden bg-red-50 border-2 border-red-400 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span class="text-[16px] font-bold text-red-900">
+            Bạn có chắc chắn muốn xóa toàn bộ danh sách người được tư vấn không?
+          </span>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              id="nutDongYXoaHet"
+              class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-[15px] cursor-pointer"
+            >
+              Có, xóa hết
+            </button>
+            <button
+              type="button"
+              id="nutHuyXoaHet"
+              class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded-lg text-[15px] cursor-pointer"
+            >
+              Không, giữ lại
+            </button>
+          </div>
+        </div>
+
+        <!-- Bảng hiển thị danh sách người được tư vấn -->
+        <div class="overflow-x-auto border border-slate-300 rounded-xl">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1E3A8A] text-white text-[15px]">
+                <th class="py-3 px-3 font-bold">STT</th>
+                <th class="py-3 px-3 font-bold">Họ và Tên</th>
+                <th class="py-3 px-3 font-bold">Số Điện Thoại</th>
+                <th class="py-3 px-3 font-bold">Địa Chỉ</th>
+                <th class="py-3 px-3 font-bold">Giới tính / Tuổi</th>
+                <th class="py-3 px-3 font-bold">Cao / Nặng</th>
+                <th class="py-3 px-3 font-bold">BMI &amp; Thể Trạng</th>
+                <th class="py-3 px-3 font-bold text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="bangDanhSachBody" class="divide-y divide-slate-200 text-[15px] font-medium text-slate-900">
+              <tr>
+                <td colspan="8" class="py-6 text-center text-slate-500 italic">
+                  Chưa có hồ sơ nào. Khi bạn tính BMI, hệ thống sẽ tự động lưu người được tư vấn vào đây!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. TRUNG TÂM AI TỰ HỌC & PHÁT TRIỂN LIÊN TỤC V134 -->
+      <section class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h2 class="text-[19px] font-extrabold text-amber-300 flex items-center gap-2">
+              <span>🧬 TRUNG TÂM AI TỰ HỌC &amp; TỰ PHÁT TRIỂN (PHIÊN BẢN V134)</span>
+            </h2>
+            <p class="text-[14.5px] text-blue-100 mt-0.5">
+              AI tự động phân tích xu hướng từ những người bạn đã tư vấn để ngày càng thông minh và sát thực tế hơn
+            </p>
+          </div>
+          <span id="capDoAI" class="bg-amber-400 text-slate-950 font-extrabold text-sm px-3.5 py-1 rounded-full self-start sm:self-auto">
+            Cấp độ AI: V134.1 (Sẵn sàng)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-slate-900">
+          <div class="bg-white/95 rounded-xl p-3.5">
+            <div class="text-xs font-bold uppercase text-slate-500">Số ca AI đã học</div>
+            <div id="thongKeSoCaAI" class="text-2xl font-extrabold text-indigo-900 mt-0.5">0 ca tư vấn</div>
+            <div id="thongKeTuoiTB" class="text-xs font-semibold text-slate-600 mt-1">Độ tuổi trung bình: --</div>
+          </div>
+          <div class="bg-white/95 rounded-xl p-3.5">
+            <div class="text-xs font-bold uppercase text-slate-500">Tỷ lệ thể trạng cộng đồng</div>
+            <div id="thongKeTheTrang" class="text-base font-extrabold text-emerald-800 mt-1">Chưa có dữ liệu mẫu</div>
+            <div id="thongKeKhuVuc" class="text-xs font-semibold text-slate-600 mt-1">Khu vực phổ biến: --</div>
+          </div>
+          <div class="bg-white/95 rounded-xl p-3.5">
+            <div class="text-xs font-bold uppercase text-slate-500">Kinh nghiệm thực tế đã nạp</div>
+            <div id="thongKeKinhNghiem" class="text-2xl font-extrabold text-purple-900 mt-0.5">3 quy tắc gốc</div>
+            <div class="text-xs font-semibold text-slate-600 mt-1">Tự động áp dụng vào mọi bước</div>
+          </div>
+        </div>
+
+        <div id="nhatKyTuHocAI" class="bg-black/30 border border-indigo-700/60 rounded-xl p-3.5 text-[14px] text-blue-100 font-medium space-y-1">
+          <div>• <strong>Hệ thống V134:</strong> Đã kích hoạt chế độ Tự động chạy mọi bước (Auto-Pilot) từ khâu kiểm tra dữ liệu đến lưu danh sách.</div>
+        </div>
+      </section>
+
+      <!-- 6. Bảng tham khảo chỉ số BMI (WHO) -->
+      <section class="bg-[#E2E8F0] rounded-xl p-4 sm:p-5 border border-slate-300">
+        <h2 class="text-[16px] font-bold text-[#102A43] mb-2.5">
+          Bảng tham khảo chỉ số BMI (Tổ chức Y tế Thế giới - WHO):
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[15px] font-medium text-[#102A43]">
+          <div class="bg-white/80 rounded-lg px-3 py-2 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+            <span><strong>Dưới 18.5:</strong> Cân nặng thấp (Gầy)</span>
+          </div>
+          <div class="bg-white/80 rounded-lg px-3 py-2 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-green-600 shrink-0"></span>
+            <span><strong>18.5 – 24.9:</strong> Bình thường (Tốt)</span>
+          </div>
+          <div class="bg-white/80 rounded-lg px-3 py-2 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-orange-600 shrink-0"></span>
+            <span><strong>25.0 – 29.9:</strong> Thừa cân</span>
+          </div>
+          <div class="bg-white/80 rounded-lg px-3 py-2 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-600 shrink-0"></span>
+            <span><strong>Từ 30.0 trở lên:</strong> Béo phì</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      let gioiTinhDaChon = "";
+      let cheDoTuDong = true;
+      let boDemTuDong = null;
+      let hoSoHienTai = null;
+
+      // Dữ liệu lưu trữ an toàn (hỗ trợ cả bộ nhớ trong và localStorage)
+      let danhSachTuVan = [];
+      let boNhoTuHocAI = {
+        soLanTuHoc: 1,
+        diemChatLuong: 10,
+        kinhNghiemBoSung: [
+          "Người từ 35–55 tuổi nên ưu tiên kiểm tra vòng eo và huyết áp định kỳ song song với chỉ số BMI.",
+          "Uống 1 cốc nước ấm 200ml vào buổi sáng sau khi thức dậy giúp kích hoạt hệ tiêu hóa và tuần hoàn.",
+          "Không nên giảm cân đột ngột quá 1kg/tuần ở tuổi trung niên để bảo vệ cơ bắp và làn da."
+        ]
+      };
+      let cauHinhAPI = {
+        deepseekKey: "",
+        geminiKey: ""
+      };
+
+      // Các phần tử DOM
+      const nutCheDoTuDong = document.getElementById("nutCheDoTuDong");
+      const nhanCheDoTuDong = document.getElementById("nhanCheDoTuDong");
+      const nutMoCaiDatAI = document.getElementById("nutMoCaiDatAI");
+      const khungCaiDatAI = document.getElementById("khungCaiDatAI");
+      const nutDongCaiDatAI = document.getElementById("nutDongCaiDatAI");
+      const oDeepSeekKey = document.getElementById("oDeepSeekKey");
+      const oGeminiKey = document.getElementById("oGeminiKey");
+      const nutHienAnKey = document.getElementById("nutHienAnKey");
+      const nutLuuAPI = document.getElementById("nutLuuAPI");
+      const trangThaiKetNoiAI = document.getElementById("trangThaiKetNoiAI");
+
+      const buoc1 = document.getElementById("buoc1");
+      const buoc2 = document.getElementById("buoc2");
+      const buoc3 = document.getElementById("buoc3");
+      const buoc4 = document.getElementById("buoc4");
+      const buoc5 = document.getElementById("buoc5");
+
+      const hopThongBaoNhanh = document.getElementById("hopThongBaoNhanh");
+      const noiDungThongBaoNhanh = document.getElementById("noiDungThongBaoNhanh");
+      const nutDongThongBaoNhanh = document.getElementById("nutDongThongBaoNhanh");
+
+      const oHoTen = document.getElementById("oHoTen");
+      const oSoDienThoai = document.getElementById("oSoDienThoai");
+      const oDiaChi = document.getElementById("oDiaChi");
+      const nutMauThu = document.getElementById("nutMauThu");
+
+      const nutChonNam = document.getElementById("nutChonNam");
+      const nutChonNu = document.getElementById("nutChonNu");
+      const khungGioiTinh = document.getElementById("khungGioiTinh");
+      const oTuoi = document.getElementById("oTuoi");
+      const oChieuCao = document.getElementById("oChieuCao");
+      const oCanNang = document.getElementById("oCanNang");
+      const nutTinhBMI = document.getElementById("nutTinhBMI");
+      const nutLuuHoSoRieng = document.getElementById("nutLuuHoSoRieng");
+      const nutNhapLai = document.getElementById("nutNhapLai");
+
+      const hopCanhBao = document.getElementById("hopCanhBao");
+      const tieuDeLoi = document.getElementById("tieuDeLoi");
+      const noiDungLoi = document.getElementById("noiDungLoi");
+      const nutDongCanhBao = document.getElementById("nutDongCanhBao");
+
+      const nhanThongTinKhach = document.getElementById("nhanThongTinKhach");
+      const nhanSoBMI = document.getElementById("nhanSoBMI");
+      const nhanPhanLoai = document.getElementById("nhanPhanLoai");
+      const khungThuocDo = document.getElementById("khungThuocDo");
+      const kimChiBMI = document.getElementById("kimChiBMI");
+      const nhanLoiKhuyen = document.getElementById("nhanLoiKhuyen");
+      const doanLoiKhuyenChinh = document.getElementById("doanLoiKhuyenChinh");
+      const danhSachChiTiet = document.getElementById("danhSachChiTiet");
+
+      const khungTuVanChuyenSau = document.getElementById("khungTuVanChuyenSau");
+      const nutPhanTichAI = document.getElementById("nutPhanTichAI");
+      const tabTatCa = document.getElementById("tabTatCa");
+      const tabDinhDuong = document.getElementById("tabDinhDuong");
+      const tabLuyenTap = document.getElementById("tabLuyenTap");
+      const tabNghiNgoi = document.getElementById("tabNghiNgoi");
+      const tabAIChuyenSau = document.getElementById("tabAIChuyenSau");
+
+      const theTuVanDinhDuong = document.getElementById("theTuVanDinhDuong");
+      const theTuVanLuyenTap = document.getElementById("theTuVanLuyenTap");
+      const theTuVanNghiNgoi = document.getElementById("theTuVanNghiNgoi");
+      const theTuVanAI = document.getElementById("theTuVanAI");
+
+      const tomTatDinhDuong = document.getElementById("tomTatDinhDuong");
+      const danhSachDinhDuong = document.getElementById("danhSachDinhDuong");
+      const tomTatLuyenTap = document.getElementById("tomTatLuyenTap");
+      const danhSachLuyenTap = document.getElementById("danhSachLuyenTap");
+      const tomTatNghiNgoi = document.getElementById("tomTatNghiNgoi");
+      const danhSachNghiNgoi = document.getElementById("danhSachNghiNgoi");
+
+      const nhanNguonAI = document.getElementById("nhanNguonAI");
+      const noiDungPhanTichAI = document.getElementById("noiDungPhanTichAI");
+      const nutDanhGiaTotAI = document.getElementById("nutDanhGiaTotAI");
+      const oDayAI = document.getElementById("oDayAI");
+      const nutDayAI = document.getElementById("nutDayAI");
+
+      const soLuongHoSo = document.getElementById("soLuongHoSo");
+      const nutXuatExcel = document.getElementById("nutXuatExcel");
+      const nutXuatBaoCaoHTML = document.getElementById("nutXuatBaoCaoHTML");
+      const nutXuatJSON = document.getElementById("nutXuatJSON");
+      const oTimKiemKhach = document.getElementById("oTimKiemKhach");
+      const nutXoaDanhSach = document.getElementById("nutXoaDanhSach");
+      const hopXacNhanXoa = document.getElementById("hopXacNhanXoa");
+      const nutDongYXoaHet = document.getElementById("nutDongYXoaHet");
+      const nutHuyXoaHet = document.getElementById("nutHuyXoaHet");
+      const bangDanhSachBody = document.getElementById("bangDanhSachBody");
+
+      const capDoAI = document.getElementById("capDoAI");
+      const thongKeSoCaAI = document.getElementById("thongKeSoCaAI");
+      const thongKeTuoiTB = document.getElementById("thongKeTuoiTB");
+      const thongKeTheTrang = document.getElementById("thongKeTheTrang");
+      const thongKeKhuVuc = document.getElementById("thongKeKhuVuc");
+      const thongKeKinhNghiem = document.getElementById("thongKeKinhNghiem");
+      const nhatKyTuHocAI = document.getElementById("nhatKyTuHocAI");
+
+      // --- Quản lý lưu trữ LocalStorage an toàn ---
+      function taiDuLieuLuuTru() {
+        try {
+          const ds = localStorage.getItem("bmi_v134_danh_sach");
+          if (ds) {
+            danhSachTuVan = JSON.parse(ds);
+          }
+          const ai = localStorage.getItem("bmi_v134_bo_nho_ai");
+          if (ai) {
+            const parsed = JSON.parse(ai);
+            if (parsed && Array.isArray(parsed.kinhNghiemBoSung)) {
+              boNhoTuHocAI = parsed;
+            }
+          }
+          const api = localStorage.getItem("bmi_v134_api_keys");
+          if (api) {
+            cauHinhAPI = JSON.parse(api);
+            oDeepSeekKey.value = cauHinhAPI.deepseekKey || "";
+            oGeminiKey.value = cauHinhAPI.geminiKey || "";
+            capNhatTrangThaiAPI();
+          }
+        } catch (err) {
+          // Bỏ qua nếu trình duyệt chặn localStorage
+        }
+      }
+
+      function luuDuLieuLuuTru() {
+        try {
+          localStorage.setItem("bmi_v134_danh_sach", JSON.stringify(danhSachTuVan));
+          localStorage.setItem("bmi_v134_bo_nho_ai", JSON.stringify(boNhoTuHocAI));
+          localStorage.setItem("bmi_v134_api_keys", JSON.stringify(cauHinhAPI));
+        } catch (err) {
+          // Bỏ qua nếu trình duyệt chặn localStorage
+        }
+      }
+
+      function hienThongBaoNhanh(thongDiep) {
+        noiDungThongBaoNhanh.textContent = thongDiep;
+        hopThongBaoNhanh.classList.remove("hidden");
+      }
+
+      function ghiNhatKyAI(noiDung) {
+        const dong = document.createElement("div");
+        const gio = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        dong.innerHTML = "• <strong>[" + gio + "]</strong> " + noiDung;
+        nhatKyTuHocAI.prepend(dong);
+        while (nhatKyTuHocAI.children.length > 5) {
+          nhatKyTuHocAI.removeChild(nhatKyTuHocAI.lastChild);
+        }
+      }
+
+      function datTrangThaiBuoc(soBuocHoanThanh) {
+        const cacBuoc = [buoc1, buoc2, buoc3, buoc4, buoc5];
+        cacBuoc.forEach(function (el, idx) {
+          el.classList.remove("active-step", "done-step");
+          if (idx + 1 < soBuocHoanThanh) {
+            el.classList.add("done-step");
+          } else if (idx + 1 === soBuocHoanThanh) {
+            el.classList.add(" done-step".trim());
+          }
+        });
+      }
+
+      function chuanHoaHoTen(ten) {
+        return ten
+          .trim()
+          .replace(/\s+/g, " ")
+          .split(" ")
+          .map(function (tu) {
+            if (!tu) return "";
+            return tu.charAt(0).toUpperCase() + tu.slice(1).toLowerCase();
+          })
+          .join(" ");
+      }
+
+      function capNhatTrangThaiAPI() {
+        const coDeepSeek = Boolean(cauHinhAPI.deepseekKey && cauHinhAPI.deepseekKey.trim());
+        const coGemini = Boolean(cauHinhAPI.geminiKey && cauHinhAPI.geminiKey.trim());
+        if (coDeepSeek && coGemini) {
+          trangThaiKetNoiAI.textContent =
+            "Trạng thái: Đã kết nối DeepSeek (Ưu tiên 1) + Gemini (Dự phòng tự động)";
+        } else if (coDeepSeek) {
+          trangThaiKetNoiAI.textContent =
+            "Trạng thái: Đã kết nối DeepSeek API (Ưu tiên số 1)";
+        } else if (coGemini) {
+          trangThaiKetNoiAI.textContent =
+            "Trạng thái: Đã kết nối Google Gemini API";
+        } else {
+          trangThaiKetNoiAI.textContent =
+            "Trạng thái: Đang dùng Mô hình AI Tự Học V134 Nội Bộ (Nhập API Key nếu muốn gọi DeepSeek/Gemini trực tuyến)";
+        }
+      }
+
+      function chonTabTuVan(loaiTab) {
+        [tabTatCa, tabDinhDuong, tabLuyenTap, tabNghiNgoi, tabAIChuyenSau].forEach(function (btn) {
+          btn.classList.remove("active-tab");
+        });
+
+        theTuVanDinhDuong.classList.add("hidden");
+        theTuVanLuyenTap.classList.add("hidden");
+        theTuVanNghiNgoi.classList.add("hidden");
+        theTuVanAI.classList.add("hidden");
+
+        if (loaiTab === "dinhduong") {
+          tabDinhDuong.classList.add("active-tab");
+          theTuVanDinhDuong.classList.remove("hidden");
+        } else if (loaiTab === "luyentap") {
+          tabLuyenTap.classList.add("active-tab");
+          theTuVanLuyenTap.classList.remove("hidden");
+        } else if (loaiTab === "nghingoi") {
+          tabNghiNgoi.classList.add("active-tab");
+          theTuVanNghiNgoi.classList.remove("hidden");
+        } else if (loaiTab === "aichuyensau") {
+          tabAIChuyenSau.classList.add("active-tab");
+          theTuVanAI.classList.remove("hidden");
+        } else {
+          tabTatCa.classList.add("active-tab");
+          theTuVanDinhDuong.classList.remove("hidden");
+          theTuVanLuyenTap.classList.remove("hidden");
+          theTuVanNghiNgoi.classList.remove("hidden");
+          theTuVanAI.classList.remove("hidden");
+        }
+      }
+
+      function xoaDanhDauLoi() {
+        hopCanhBao.classList.add("hidden");
+        oHoTen.classList.remove("input-error");
+        oSoDienThoai.classList.remove("input-error");
+        oDiaChi.classList.remove("input-error");
+        khungGioiTinh.classList.remove("input-error");
+        oTuoi.classList.remove("input-error");
+        oChieuCao.classList.remove("input-error");
+        oCanNang.classList.remove("input-error");
+      }
+
+      function chonGioiTinh(gt) {
+        gioiTinhDaChon = gt;
+        xoaDanhDauLoi();
+        if (gt === "Nam") {
+          nutChonNam.classList.add("active-male");
+          nutChonNam.setAttribute("aria-pressed", "true");
+          nutChonNu.classList.remove("active-female");
+          nutChonNu.setAttribute("aria-pressed", "false");
+        } else if (gt === "Nữ") {
+          nutChonNu.classList.add("active-female");
+          nutChonNu.setAttribute("aria-pressed", "true");
+          nutChonNam.classList.remove("active-male");
+          nutChonNam.setAttribute("aria-pressed", "false");
+        } else {
+          nutChonNam.classList.remove("active-male");
+          nutChonNu.classList.remove("active-female");
+          nutChonNam.setAttribute("aria-pressed", "false");
+          nutChonNu.setAttribute("aria-pressed", "false");
+        }
+        kichHoatTuDongNeuDu();
+      }
+
+      function chuyenDoiSo(chuoi) {
+        const chuoiSach = chuoi.trim().replace(/,/g, ".");
+        if (chuoiSach === "" || !/^[+-]?(\d+(\.\d+)?|\.\d+)$/.test(chuoiSach)) {
+          return NaN;
+        }
+        return Number(chuoiSach);
+      }
+
+      function hienThiLoi(tieuDe, thongBao, phanTuLoi) {
+        xoaDanhDauLoi();
+        tieuDeLoi.textContent = tieuDe;
+        noiDungLoi.textContent = thongBao;
+        hopCanhBao.classList.remove("hidden");
+
+        nhanSoBMI.textContent = "Chưa thể tính BMI";
+        nhanSoBMI.style.color = "#B91C1C";
+        nhanPhanLoai.textContent = thongBao;
+        nhanPhanLoai.style.color = "#B91C1C";
+        khungThuocDo.classList.add("hidden");
+        nhanLoiKhuyen.classList.add("hidden");
+        khungTuVanChuyenSau.classList.add("hidden");
+
+        if (phanTuLoi) {
+          phanTuLoi.classList.add("input-error");
+          if (typeof phanTuLoi.focus === "function") {
+            phanTuLoi.focus();
+          }
+        }
+        hopCanhBao.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function tinhViTriKim(bmi) {
+        if (bmi < 18.5) {
+          const t = Math.max(0, (bmi - 12) / (18.5 - 12));
+          return t * 25;
+        } else if (bmi < 25) {
+          const t = (bmi - 18.5) / (25 - 18.5);
+          return 25 + t * 25;
+        } else if (bmi < 30) {
+          const t = (bmi - 25) / (30 - 25);
+          return 50 + t * 25;
+        } else {
+          const t = Math.min(1, (bmi - 30) / (38 - 30));
+          return 75 + t * 25;
+        }
+      }
+
+      function dienDanhSach(ulElement, cacMuc) {
+        ulElement.innerHTML = "";
+        cacMuc.forEach(function (noiDung) {
+          const li = document.createElement("li");
+          li.textContent = noiDung;
+          ulElement.appendChild(li);
+        });
+      }
+
+      function taoNoiDungTuVan(bmi, tuoi, gioiTinh, canNang) {
+        const luongNuocLit = ((canNang * 35) / 1000).toFixed(1);
+        const laTrungNienHoacCaoTuoi = tuoi >= 35;
+
+        // 1. Tư vấn dinh dưỡng
+        let tomTatDD = "";
+        let danhSachDD = [];
+
+        if (bmi < 18.5) {
+          tomTatDD = "Mục tiêu: Tăng cân lành mạnh, bổ sung năng lượng và khối cơ.";
+          danhSachDD = [
+            "Tăng cường thực phẩm giàu đạm dễ tiêu hóa: cá, thịt nạc, trứng, đậu phụ, sữa và các loại hạt.",
+            "Chia nhỏ thành 5–6 bữa trong ngày (3 bữa chính và 2–3 bữa phụ bằng sữa hạt, trái cây chín, sữa chua).",
+            "Bổ sung chất béo tốt từ dầu ô-liu, quả bơ, cá hồi để tăng hấp thu vitamin mà không gây đầy bụng.",
+            "Uống khoảng " + luongNuocLit + " lít nước mỗi ngày; tránh uống nhiều nước ngay trước bữa ăn để không bị ngang dạ."
+          ];
+        } else if (bmi < 25.0) {
+          tomTatDD = "Mục tiêu: Duy trì cân nặng chuẩn, bảo vệ tim mạch và hệ tiêu hóa.";
+          danhSachDD = [
+            "Áp dụng quy tắc đĩa ăn cân bằng: 1/2 đĩa là rau xanh và củ quả, 1/4 là đạm nạc (cá, thịt gia cầm bỏ da, đậu), 1/4 là tinh bột (cơm gạo lứt, khoai, bún).",
+            "Hạn chế thức ăn mặn (dưới 5g muối/ngày), đồ chiên rán nhiều lần và nước ngọt đóng chai.",
+            laTrungNienHoacCaoTuoi
+              ? "Ở tuổi " + tuoi + ", nên ưu tiên thực phẩm giàu Canxi và Omega-3 (cá biển, tôm, sữa ít đường, hạt óc chó) để bảo vệ xương khớp và mạch máu."
+              : "Bổ sung đa dạng trái cây tươi và các loại đậu để cung cấp đủ vitamin và khoáng chất hằng ngày.",
+            "Uống đều đặn khoảng " + luongNuocLit + " lít nước ấm hoặc nước lọc mỗi ngày."
+          ];
+        } else if (bmi < 30.0) {
+          tomTatDD = "Mục tiêu: Giảm mỡ thừa từ từ (0,5 kg/tuần), kiểm soát đường huyết và mỡ máu.";
+          danhSachDD = [
+            "Giảm 1/3 lượng tinh bột trắng (cơm trắng, bánh mì trắng, phở) và thay một phần bằng gạo lứt, yến mạch, khoai lang.",
+            "Ăn rau luộc hoặc canh rau trước khi ăn cơm và thịt để tạo cảm giác no tự nhiên, giúp kiểm soát lượng thức ăn.",
+            "Kiêng ăn vặt ban đêm (sau 20h00), hạn chế bia rượu, nước ngọt, nội tạng động vật và da, mỡ động vật.",
+            "Uống đủ khoảng " + luongNuocLit + " lít nước mỗi ngày; có thể uống 1 cốc nước ấm trước bữa ăn 20 phút."
+          ];
+        } else {
+          tomTatDD = "Mục tiêu: Giảm tải cho hệ tim mạch, gan mật và khớp gối một cách an toàn.";
+          danhSachDD = [
+            "Ưu tiên chế biến dạng hấp, luộc, áp chảo ít dầu; cắt giảm tối đa đường tinh luyện, bánh kẹo ngọt và đồ ăn nhanh.",
+            "Tăng lượng chất xơ hòa tan từ rau lá xanh đậm, bông cải, mướp đắng, bí xanh và trái cây ít ngọt (ổi, bưởi, táo).",
+            "Ưu tiên nguồn đạm từ cá và thực vật (đậu phụ, các loại đỗ) thay cho thịt đỏ nhiều mỡ.",
+            "Uống khoảng " + luongNuocLit + " lít nước lọc mỗi ngày và ăn tối nhẹ nhàng trước 19h30."
+          ];
+        }
+
+        // 2. Chế độ luyện tập
+        let tomTatLT = "";
+        let danhSachLT = [];
+
+        if (bmi < 18.5) {
+          tomTatLT = "Mục tiêu: Kích thích trao đổi chất, ăn ngon miệng và săn chắc cơ bắp.";
+          danhSachLT = [
+            "Tập các bài vận động vừa sức 25–30 phút/ngày như đi bộ nhẹ, tập dưỡng sinh, Yoga hoặc bài tập kháng lực nhẹ (tạ tay nhỏ 1–2 kg).",
+            "Duy trì đều đặn 4–5 buổi/tuần, tránh các bài chạy bộ quá sức kéo dài gây tiêu hao nhiều calo.",
+            "Khởi động kỹ các khớp cổ tay, cổ chân, vai gáy 5–10 phút trước khi tập.",
+            "Sau khi tập 30 phút nên uống 1 ly sữa ấm hoặc ăn nhẹ (chuối, trứng luộc) để phục hồi cơ."
+          ];
+        } else if (bmi < 25.0) {
+          tomTatLT = "Mục tiêu: Giữ gìn sự dẻo dai của xương khớp và tăng sức bền tim phổi.";
+          danhSachLT = [
+            "Duy trì vận động 30–45 phút mỗi ngày với các môn phù hợp lứa tuổi: đi bộ nhanh, đạp xe, bơi lội, cầu lông hoặc khiêu vũ thể thao.",
+            "Kết hợp 2–3 buổi/tuần tập kéo giãn cơ, Yoga hoặc bài tập giữ thăng bằng để phòng ngừa đau lưng, mỏi gối.",
+            laTrungNienHoacCaoTuoi
+              ? "Ở độ tuổi " + tuoi + ", nên tập vào buổi sáng hoặc chiều mát, tránh tập quá khuya sau 21h00 ảnh hưởng đến giấc ngủ."
+              : "Kết hợp linh hoạt giữa bài tập sức bền (chạy bộ, bơi) và bài tập sức mạnh cơ bắp.",
+            "Luôn khởi động làm ấm cơ thể 5–10 phút trước khi vận động."
+          ];
+        } else if (bmi < 30.0) {
+          tomTatLT = "Mục tiêu: Đốt cháy mỡ thừa vùng bụng, tăng nhịp tim an toàn và bảo vệ khớp.";
+          danhSachLT = [
+            "Thực hiện 45 phút vận động nhịp nhàng mỗi ngày (ít nhất 5 buổi/tuần): đi bộ nhanh, đạp xe, bơi lội hoặc tập Aerobic nhẹ.",
+            "Hạn chế các động tác bật nhảy mạnh hoặc chạy tốc độ cao trên nền cứng để tránh gây quá tải cho khớp gối và cổ chân.",
+            "Tăng vận động tự nhiên trong ngày: đi cầu thang bộ khi phù hợp, làm việc nhà, đi bộ nhẹ 15 phút sau bữa tối.",
+            "Theo dõi nhịp thở khi tập (tập ở mức vừa phải, vẫn có thể nói chuyện trọn câu mà không bị hụt hơi)."
+          ];
+        } else {
+          tomTatLT = "Mục tiêu: Vận động giảm cân an toàn, tuyệt đối không gây chấn thương khớp gối và cột sống.";
+          danhSachLT = [
+            "Ưu tiên các môn không dồn trọng lượng lên khớp gối: bơi lội, đi bộ dưới nước, đạp xe tại chỗ hoặc đi bộ chậm trên đường bằng phẳng.",
+            "Bắt đầu từ 15–20 phút/lần, có thể chia làm 2 lần trong ngày (sáng và chiều), sau đó tăng dần lên 30–40 phút khi cơ thể đã quen.",
+            "Thực hiện các bài tập vươn thở, xoay khớp vai, khớp hông nhẹ nhàng mỗi sáng sau khi thức dậy.",
+            "Nếu có biểu hiện đau tức ngực, chóng mặt hoặc đau nhói khớp gối, cần nghỉ ngơi ngay và tham khảo ý kiến bác sĩ."
+          ];
+        }
+
+        // 3. Chế độ học tập, làm việc & nghỉ ngơi
+        let tomTatNN = "";
+        let danhSachNN = [];
+
+        if (tuoi < 25) {
+          tomTatNN = "Mục tiêu: Tối ưu khả năng tập trung học tập, phát triển thể chất và phục hồi trí não.";
+          danhSachNN = [
+            "Áp dụng phương pháp học tập 45–50 phút tập trung, sau đó đứng dậy đi lại, vươn vai và nhìn xa 5–10 phút để bảo vệ mắt.",
+            "Ngủ đủ 7,5–8,5 tiếng mỗi đêm; hạn chế thức khuya học bài sau 23h00 vì não bộ cần giấc ngủ sâu để ghi nhớ kiến thức.",
+            "Dành 15–20 phút chợp mắt buổi trưa để lấy lại sự tỉnh táo cho buổi chiều.",
+            "Tắt điện thoại, máy tính ít nhất 30 phút trước khi đi ngủ để dễ vào giấc."
+          ];
+        } else if (tuoi <= 55) {
+          tomTatNN = "Mục tiêu: Cân bằng công việc – học tập nâng cao, giảm căng thẳng (stress) và tái tạo năng lượng tuổi " + tuoi + ".";
+          danhSachNN = [
+            "Nguyên tắc làm việc & học tập bền bỉ: Sau mỗi 45–60 phút ngồi làm việc hoặc đọc tài liệu, hãy đứng dậy xoay cổ, vai gáy và đi lại 3–5 phút để thông thoáng máu lên não.",
+            "Đảm bảo ngủ đủ 7–8 tiếng mỗi đêm (nên lên giường trước 22h30–23h00) vì thiếu ngủ ở tuổi trung niên làm tăng hormone gây tích mỡ bụng và mệt mỏi.",
+            "Nghỉ trưa ngắn 15–30 phút mỗi ngày giúp ổn định huyết áp, giảm nhịp tim và tăng hiệu suất làm việc buổi chiều.",
+            "Dành 20–30 phút mỗi tối cho hoạt động thư giãn tinh thần: đọc sách giấy, nghe nhạc nhẹ, trò chuyện cùng gia đình hoặc tập hít thở sâu."
+          ];
+        } else {
+          tomTatNN = "Mục tiêu: Duy trì minh mẫn trí tuệ, ngủ sâu giấc và giữ tinh thần an vui ở tuổi " + tuoi + ".";
+          danhSachNN = [
+            "Rèn luyện trí não nhẹ nhàng mỗi ngày 30–45 phút qua việc đọc sách báo, học kỹ năng mới, chơi cờ hoặc giao lưu câu lạc bộ.",
+            "Duy trì giờ đi ngủ và thức dậy cố định (ngủ khoảng 7 tiếng/đêm kèm giấc nghỉ trưa 20–30 phút).",
+            "Ngâm chân nước ấm (khoảng 40°C) từ 10–15 phút vào buổi tối trước khi ngủ giúp lưu thông khí huyết và ngủ ngon hơn.",
+            "Giữ không gian phòng ngủ yên tĩnh, thoáng mát, ánh sáng dịu nhẹ và tránh uống trà đậm, cà phê sau 15h00 chiều."
+          ];
+        }
+
+        tomTatDinhDuong.textContent = tomTatDD;
+        dienDanhSach(danhSachDinhDuong, danhSachDD);
+
+        tomTatLuyenTap.textContent = tomTatLT;
+        dienDanhSach(danhSachLuyenTap, danhSachLT);
+
+        tomTatNghiNgoi.textContent = tomTatNN;
+        dienDanhSach(danhSachNghiNgoi, danhSachNN);
+
+        return {
+          dinhDuong: tomTatDD + " " + danhSachDD.join(" "),
+          luyenTap: tomTatLT + " " + danhSachLT.join(" "),
+          nghiNgoi: tomTatNN + " " + danhSachNN.join(" ")
+        };
+      }
+
+      // --- Trí tuệ nhân tạo Nghiên Cứu Sâu (Ưu tiên DeepSeek -> Gemini -> AI Nội Bộ Tự Học V134) ---
+      function taoPhanTichAINoiBo(hoSo) {
+        const chenhLechCan =
+          hoSo.bmi < 18.5
+            ? "cần tăng thêm khoảng " + (hoSo.canNangToiThieu - hoSo.canNang).toFixed(1) + " kg"
+            : hoSo.bmi > 24.9
+            ? "cần giảm bớt khoảng " + (hoSo.canNang - hoSo.canNangToiDa).toFixed(1) + " kg"
+            : "đang nằm ngay trong ngưỡng vàng lý tưởng";
+
+        const bmr =
+          hoSo.gioiTinh === "Nam"
+            ? Math.round(10 * hoSo.canNang + 6.25 * hoSo.chieuCaoCm - 5 * hoSo.tuoi + 5)
+            : Math.round(10 * hoSo.canNang + 6.25 * hoSo.chieuCaoCm - 5 * hoSo.tuoi - 161);
+        const tdee = Math.round(bmr * 1.375);
+
+        const kinhNghiemGanNhat =
+          boNhoTuHocAI.kinhNghiemBoSung[boNhoTuHocAI.kinhNghiemBoSung.length - 1] || "";
+
+        return (
+          "📌 HỒ SƠ PHÂN TÍCH CHUYÊN SÂU V134 CHO: " +
+          hoSo.hoTen.toUpperCase() +
+          " (" +
+          hoSo.gioiTinh +
+          ", " +
+          hoSo.tuoi +
+          " tuổi - Đ/c: " +
+          hoSo.diaChi +
+          ")\n\n" +
+          "1. Đánh giá chuyển hóa & năng lượng:\n" +
+          "• Chỉ số BMI đạt " +
+          hoSo.bmi.toFixed(1) +
+          " (" +
+          hoSo.phanLoaiNgan +
+          "), hiện tại " +
+          chenhLechCan +
+          " để đạt vùng tối ưu cho hệ tim mạch và xương khớp.\n" +
+          "• Mức năng lượng chuyển hóa cơ bản (BMR) ước tính: ~" +
+          bmr +
+          " kcal/ngày; nhu cầu năng lượng sinh hoạt (TDEE): ~" +
+          tdee +
+          " kcal/ngày.\n" +
+          "• Tỷ lệ mỡ cơ thể ước tính theo tuổi " +
+          hoSo.tuoi +
+          ": ~" +
+          hoSo.tyLeMo.toFixed(1) +
+          "%. Lượng nước khuyến nghị: " +
+          ((hoSo.canNang * 35) / 1000).toFixed(1) +
+          " lít/ngày.\n\n" +
+          "2. Lộ trình 30 ngày phù hợp lứa tuổi " +
+          hoSo.tuoi +
+          ":\n" +
+          "• Buổi sáng (6h00 - 7h00): Uống 1 cốc nước ấm, khởi động xoay khớp kỹ 10 phút và đi bộ/tập dưỡng sinh 25 phút.\n" +
+          "• Bữa trưa & chiều: Ăn đủ đạm thực vật và cá, hạn chế đồ chiên xào; nghỉ trưa 20 phút giúp phục hồi trí não.\n" +
+          "• Buổi tối (trước 22h30): Ngâm chân nước ấm hoặc giãn cơ nhẹ 10 phút để ngủ sâu giấc.\n\n" +
+          "3. Tri thức AI V134 tự học được áp dụng thêm:\n" +
+          "• " +
+          kinhNghiemGanNhat
+        );
+      }
+
+      async function goiAIPhanTichSau(hoSo) {
+        datTrangThaiBuoc(4);
+        const promptChuyenSau =
+          "Bạn là chuyên gia bác sĩ dinh dưỡng và sức khỏe tuổi trung niên V134. Hãy tư vấn ngắn gọn, dễ hiểu, ấm áp bằng tiếng Việt cho khách hàng: " +
+          hoSo.hoTen +
+          ", Giới tính: " +
+          hoSo.gioiTinh +
+          ", Tuổi: " +
+          hoSo.tuoi +
+          ", Địa chỉ: " +
+          hoSo.diaChi +
+          ", Chiều cao: " +
+          hoSo.chieuCaoCm.toFixed(0) +
+          "cm, Cân nặng: " +
+          hoSo.canNang +
+          "kg, BMI: " +
+          hoSo.bmi.toFixed(1) +
+          " (" +
+          hoSo.phanLoaiNgan +
+          "), Tỷ lệ mỡ ước tính: " +
+          hoSo.tyLeMo.toFixed(1) +
+          "%. Hãy nêu: 1) Đánh giá thể trạng & chuyển hóa, 2) Thực đơn mẫu 1 ngày dễ nấu tại Việt Nam, 3) Lịch vận động & nghỉ ngơi bảo vệ xương khớp.";
+
+        const dsKey = (cauHinhAPI.deepseekKey || "").trim();
+        const gmKey = (cauHinhAPI.geminiKey || "").trim();
+
+        // 1. Ưu tiên gọi DeepSeek API trước
+        if (dsKey) {
+          try {
+            nhanNguonAI.textContent = "Đang kết nối DeepSeek AI...";
+            noiDungPhanTichAI.textContent = "⏳ DeepSeek AI đang nghiên cứu sâu hồ sơ của " + hoSo.hoTen + "...";
+            const resp = await fetch("https://api.deepseek.com/chat/completions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + dsKey
+              },
+              body: JSON.stringify({
+                model: "deepseek-chat",
+                messages: [
+                  {
+                    role: "system",
+                    content: "Bạn là chuyên gia tư vấn sức khỏe, dinh dưỡng, luyện tập và nghỉ ngơi dành cho người Việt Nam, đặc biệt lứa tuổi trung niên 35-55."
+                  },
+                  { role: "user", content: promptChuyenSau }
+                ],
+                temperature: 0.6
+              })
+            });
+            if (resp.ok) {
+              const data = await resp.json();
+              const text =
+                data &&
+                data.choices &&
+                data.choices[0] &&
+                data.choices[0].message &&
+                data.choices[0].message.content;
+              if (text) {
+                nhanNguonAI.textContent = "Nguồn: DeepSeek AI (Ưu tiên 1)";
+                noiDungPhanTichAI.textContent = text.trim();
+                hoSo.phanTichAI = text.trim();
+                luuDuLieuLuuTru();
+                ghiNhatKyAI("DeepSeek AI đã hoàn tất nghiên cứu sâu cho hồ sơ " + hoSo.hoTen + ".");
+                datTrangThaiBuoc(5);
+                return;
+              }
+            }
+          } catch (err) {
+            ghiNhatKyAI("DeepSeek API bận hoặc lỗi mạng, tự động chuyển sang Gemini / AI V134 nội bộ.");
+          }
+        }
+
+        // 2. Dự phòng tự động sang Google Gemini API
+        if (gmKey) {
+          try {
+            nhanNguonAI.textContent = "Đang kết nối Gemini AI...";
+            noiDungPhanTichAI.textContent = "⏳ Google Gemini AI đang nghiên cứu sâu hồ sơ của " + hoSo.hoTen + "...";
+            const url =
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+              encodeURIComponent(gmKey);
+            const resp = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: promptChuyenSau }] }]
+              })
+            });
+            if (resp.ok) {
+              const data = await resp.json();
+              const text =
+                data &&
+                data.candidates &&
+                data.candidates[0] &&
+                data.candidates[0].content &&
+                data.candidates[0].content.parts &&
+                data.candidates[0].content.parts[0] &&
+                data.candidates[0].content.parts[0].text;
+              if (text) {
+                nhanNguonAI.textContent = "Nguồn: Google Gemini AI";
+                noiDungPhanTichAI.textContent = text.trim();
+                hoSo.phanTichAI = text.trim();
+                luuDuLieuLuuTru();
+                ghiNhatKyAI("Gemini AI đã hoàn tất nghiên cứu sâu cho hồ sơ " + hoSo.hoTen + ".");
+                datTrangThaiBuoc(5);
+                return;
+              }
+            }
+          } catch (err) {
+            ghiNhatKyAI("Gemini API bận hoặc lỗi mạng, tự động kích hoạt AI Tự Học V134 nội bộ.");
+          }
+        }
+
+        // 3. Mô hình AI Tự Học V134 Nội Bộ (luôn hoạt động 100% kể cả khi không có mạng)
+        nhanNguonAI.textContent = "Nguồn: AI Tự Học V134 (Tự động)";
+        const ketQuaNoiBo = taoPhanTichAINoiBo(hoSo);
+        noiDungPhanTichAI.textContent = ketQuaNoiBo;
+        hoSo.phanTichAI = ketQuaNoiBo;
+        datTrangThaiBuoc(5);
+      }
+
+      // --- Cập nhật Bảng Danh Sách & Thống Kê AI Tự Học ---
+      function capNhatTrungTamAITuHoc() {
+        const tong = danhSachTuVan.length;
+        const cap = "V134." + (boNhoTuHocAI.soLanTuHoc + tong);
+        capDoAI.textContent = "Cấp độ AI: " + cap + " (Điểm tối ưu: " + (boNhoTuHocAI.diemChatLuong + tong * 2) + ")";
+        thongKeSoCaAI.textContent = tong + " ca tư vấn";
+        thongKeKinhNghiem.textContent = boNhoTuHocAI.kinhNghiemBoSung.length + " quy tắc thực tế";
+
+        if (tong === 0) {
+          thongKeTuoiTB.textContent = "Độ tuổi trung bình: --";
+          thongKeTheTrang.textContent = "Chưa có dữ liệu mẫu";
+          thongKeKhuVuc.textContent = "Khu vực phổ biến: --";
+          return;
+        }
+
+        let tongTuoi = 0;
+        let demBinhThuong = 0;
+        let demThuaCanBeoPhi = 0;
+        let demGay = 0;
+        const demDiaChi = {};
+
+        danhSachTuVan.forEach(function (item) {
+          tongTuoi += item.tuoi;
+          if (item.bmi < 18.5) demGay++;
+          else if (item.bmi < 25) demBinhThuong++;
+          else demThuaCanBeoPhi++;
+
+          const dc = (item.diaChi || "Chưa rõ").trim();
+          demDiaChi[dc] = (demDiaChi[dc] || 0) + 1;
+        });
+
+        const tuoiTB = (tongTuoi / tong).toFixed(1);
+        thongKeTuoiTB.textContent = "Độ tuổi trung bình: " + tuoiTB + " tuổi";
+        thongKeTheTrang.textContent =
+          "Chuẩn: " + demBinhThuong + " | Thừa cân/Béo: " + demThuaCanBeoPhi + " | Gầy: " + demGay;
+
+        let khuVucMax = "--";
+        let soLanMax = 0;
+        Object.keys(demDiaChi).forEach(function (k) {
+          if (demDiaChi[k] > soLanMax) {
+            soLanMax = demDiaChi[k];
+            khuVucMax = k;
+          }
+        });
+        thongKeKhuVuc.textContent = "Khu vực nhiều nhất: " + khuVucMax;
+      }
+
+      function veBangDanhSach() {
+        const tuKhoa = oTimKiemKhach.value.trim().toLowerCase();
+        soLuongHoSo.textContent = String(danhSachTuVan.length);
+
+        const dsLoc = danhSachTuVan.filter(function (item) {
+          if (!tuKhoa) return true;
+          return (
+            (item.hoTen || "").toLowerCase().includes(tuKhoa) ||
+            (item.soDienThoai || "").toLowerCase().includes(tuKhoa) ||
+            (item.diaChi || "").toLowerCase().includes(tuKhoa) ||
+            (item.phanLoaiNgan || "").toLowerCase().includes(tuKhoa)
+          );
+        });
+
+        bangDanhSachBody.innerHTML = "";
+
+        if (dsLoc.length === 0) {
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td colspan="8" class="py-6 text-center text-slate-500 italic">' +
+            (danhSachTuVan.length === 0
+              ? "Chưa có hồ sơ nào. Khi bạn tính BMI, hệ thống sẽ tự động lưu người được tư vấn vào đây!"
+              : "Không tìm thấy người được tư vấn nào khớp với từ khóa tìm kiếm.") +
+            "</td>";
+          bangDanhSachBody.appendChild(tr);
+          capNhatTrungTamAITuHoc();
+          return;
+        }
+
+        dsLoc.forEach(function (item, index) {
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-blue-50/60 transition";
+
+          let mauBadge = "bg-green-100 text-green-900 border-green-300";
+          if (item.bmi < 18.5) mauBadge = "bg-amber-100 text-amber-900 border-amber-300";
+          else if (item.bmi >= 25 && item.bmi < 30) mauBadge = "bg-orange-100 text-orange-900 border-orange-300";
+          else if (item.bmi >= 30) mauBadge = "bg-red-100 text-red-900 border-red-300";
+
+          tr.innerHTML =
+            '<td class="py-3 px-3 font-bold text-slate-700">' +
+            (index + 1) +
+            '<div class="text-xs font-normal text-slate-500">' +
+            (item.thoiGian || "") +
+            "</div></td>" +
+            '<td class="py-3 px-3 font-bold text-[#102A43]">' +
+            item.hoTen +
+            "</td>" +
+            '<td class="py-3 px-3 font-semibold text-slate-800">' +
+            item.soDienThoai +
+            "</td>" +
+            '<td class="py-3 px-3 text-slate-700">' +
+            item.diaChi +
+            "</td>" +
+            '<td class="py-3 px-3">' +
+            item.gioiTinh +
+            " (" +
+            item.tuoi +
+            " tuổi)</td>" +
+            '<td class="py-3 px-3">' +
+            item.chieuCaoCm.toFixed(0) +
+            " cm / " +
+            item.canNang +
+            " kg</td>" +
+            '<td class="py-3 px-3">' +
+            '<span class="inline-block font-extrabold px-2.5 py-1 rounded-lg border ' +
+            mauBadge +
+            '">BMI ' +
+            item.bmi.toFixed(1) +
+            " • " +
+            item.phanLoaiNgan +
+            "</span></td>" +
+            '<td class="py-3 px-3 text-center whitespace-nowrap space-x-1">' +
+            '<button type="button" data-action="view" data-id="' +
+            item.id +
+            '" class="bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold px-2.5 py-1.5 rounded-lg text-sm cursor-pointer">Xem lại</button>' +
+            '<button type="button" data-action="delete" data-id="' +
+            item.id +
+            '" class="bg-red-100 hover:bg-red-200 text-red-800 font-bold px-2.5 py-1.5 rounded-lg text-sm cursor-pointer">Xóa</button>' +
+            "</td>";
+
+          bangDanhSachBody.appendChild(tr);
+        });
+
+        capNhatTrungTamAITuHoc();
+      }
+
+      function luuHoSoVaoDanhSach(hoSo, thongBaoThanhCong) {
+        if (!hoSo) return;
+        // Kiểm tra nếu trùng Họ tên + SĐT thì cập nhật hồ sơ đó để tránh bị nhân bản khi chạy tự động
+        const viTriTrung = danhSachTuVan.findIndex(function (x) {
+          return (
+            x.hoTen.toLowerCase() === hoSo.hoTen.toLowerCase() &&
+            x.soDienThoai === hoSo.soDienThoai
+          );
+        });
+
+        if (viTriTrung >= 0) {
+          hoSo.id = danhSachTuVan[viTriTrung].id;
+          danhSachTuVan[viTriTrung] = hoSo;
+        } else {
+          danhSachTuVan.unshift(hoSo);
+        }
+
+        luuDuLieuLuuTru();
+        veBangDanhSach();
+        if (thongBaoThanhCong) {
+          hienThongBaoNhanh("Đã lưu hồ sơ của \"" + hoSo.hoTen + "\" vào danh sách tư vấn!");
+        }
+      }
+
+      // --- Hàm tính BMI chính (Chạy toàn bộ 5 bước V134) ---
+      function tinhBMI(chayTuDongImLang) {
+        const laTuDong = chayTuDongImLang === true;
+        xoaDanhDauLoi();
+        datTrangThaiBuoc(1);
+
+        let hoTen = oHoTen.value.trim();
+        let soDienThoai = oSoDienThoai.value.trim();
+        let diaChi = oDiaChi.value.trim();
+        const chuoiTuoi = oTuoi.value.trim();
+        const chuoiCao = oChieuCao.value.trim();
+        const chuoiNang = oCanNang.value.trim();
+
+        // 1. Kiểm tra bỏ trống toàn bộ
+        if (!gioiTinhDaChon && !chuoiTuoi && !chuoiCao && !chuoiNang) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Thiếu thông tin",
+              "Bạn chưa chọn giới tính và chưa nhập tuổi, chiều cao, cân nặng.\nVui lòng điền đầy đủ thông tin rồi thử lại nhé!",
+              khungGioiTinh
+            );
+          }
+          return;
+        }
+
+        // 2. Kiểm tra từng mục bắt buộc để tính BMI
+        if (!gioiTinhDaChon) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Chưa chọn giới tính",
+              "Bạn chưa chọn giới tính.\nVui lòng nhấn chọn Nam hoặc Nữ ở mục số 1 nhé!",
+              khungGioiTinh
+            );
+          }
+          return;
+        }
+
+        if (!chuoiTuoi) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Thiếu độ tuổi",
+              "Bạn chưa nhập độ tuổi.\nVui lòng nhập tuổi của bạn ở mục số 2 (ví dụ: 48).",
+              oTuoi
+            );
+          }
+          return;
+        }
+
+        if (!chuoiCao) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Thiếu chiều cao",
+              "Bạn chưa nhập chiều cao.\nVui lòng nhập chiều cao của bạn ở mục số 3 (ví dụ: 165).",
+              oChieuCao
+            );
+          }
+          return;
+        }
+
+        if (!chuoiNang) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Thiếu cân nặng",
+              "Bạn chưa nhập cân nặng.\nVui lòng nhập cân nặng của bạn ở mục số 4 (ví dụ: 62).",
+              oCanNang
+            );
+          }
+          return;
+        }
+
+        // 3. Kiểm tra độ tuổi hợp lệ
+        const tuoiSo = chuyenDoiSo(chuoiTuoi);
+        if (Number.isNaN(tuoiSo) || !Number.isInteger(tuoiSo)) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Nhập sai độ tuổi",
+              'Độ tuổi "' + chuoiTuoi + '" không hợp lệ.\nVui lòng chỉ nhập số nguyên (ví dụ: 48).',
+              oTuoi
+            );
+          }
+          return;
+        }
+
+        if (tuoiSo < 2 || tuoiSo > 120) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Độ tuổi chưa hợp lý",
+              "Độ tuổi cần nằm trong khoảng từ 2 đến 120 tuổi.\nVui lòng kiểm tra lại số tuổi vừa nhập nhé!",
+              oTuoi
+            );
+          }
+          return;
+        }
+
+        // 4. Kiểm tra chiều cao hợp lệ
+        const chieuCaoNhap = chuyenDoiSo(chuoiCao);
+        if (Number.isNaN(chieuCaoNhap)) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Nhập sai chiều cao",
+              'Chiều cao "' + chuoiCao + '" không hợp lệ.\nVui lòng chỉ nhập chữ số (ví dụ: 165 hoặc 1,65).',
+              oChieuCao
+            );
+          }
+          return;
+        }
+
+        // 5. Kiểm tra cân nặng hợp lệ
+        const canNang = chuyenDoiSo(chuoiNang);
+        if (Number.isNaN(canNang)) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Nhập sai cân nặng",
+              'Cân nặng "' + chuoiNang + '" không hợp lệ.\nVui lòng chỉ nhập chữ số (ví dụ: 60 hoặc 62,5).',
+              oCanNang
+            );
+          }
+          return;
+        }
+
+        // 6. Tự động nhận diện đơn vị mét (m) hoặc xăng-ti-mét (cm)
+        let chieuCaoM = 0;
+        let chieuCaoCm = 0;
+        if (chieuCaoNhap >= 0.5 && chieuCaoNhap <= 2.5) {
+          chieuCaoM = chieuCaoNhap;
+          chieuCaoCm = chieuCaoNhap * 100;
+        } else {
+          chieuCaoCm = chieuCaoNhap;
+          chieuCaoM = chieuCaoNhap / 100;
+        }
+
+        if (chieuCaoCm < 50 || chieuCaoCm > 250) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Chiều cao chưa hợp lý",
+              "Chiều cao cần nằm trong khoảng từ 50 cm đến 250 cm.\nVui lòng kiểm tra lại số vừa nhập nhé!",
+              oChieuCao
+            );
+          }
+          return;
+        }
+
+        if (canNang < 10 || canNang > 300) {
+          if (!laTuDong) {
+            hienThiLoi(
+              "Cân nặng chưa hợp lý",
+              "Cân nặng cần nằm trong khoảng từ 10 kg đến 300 kg.\nVui lòng kiểm tra lại số vừa nhập nhé!",
+              oCanNang
+            );
+          }
+          return;
+        }
+
+        // Tự động chuẩn hóa Họ tên, Số điện thoại, Địa chỉ
+        if (hoTen) {
+          hoTen = chuanHoaHoTen(hoTen);
+          oHoTen.value = hoTen;
+        } else {
+          hoTen = "Khách tư vấn #" + (danhSachTuVan.length + 1);
+        }
+        soDienThoai = soDienThoai || "Chưa ghi";
+        diaChi = diaChi || "Chưa ghi";
+
+        datTrangThaiBuoc(2);
+
+        // 7. Tính toán BMI, khoảng cân nặng lý tưởng và tỷ lệ mỡ ước tính
+        const bmi = canNang / (chieuCaoM * chieuCaoM);
+        const canNangToiThieu = 18.5 * (chieuCaoM * chieuCaoM);
+        const canNangToiDa = 24.9 * (chieuCaoM * chieuCaoM);
+
+        const heSoGioiTinh = gioiTinhDaChon === "Nam" ? 1 : 0;
+        const tyLeMo = Math.max(3.0, 1.2 * bmi + 0.23 * tuoiSo - 10.8 * heSoGioiTinh - 5.4);
+        const vongEoKhuyenNghi = gioiTinhDaChon === "Nam" ? "dưới 90 cm" : "dưới 80 cm";
+
+        let phanLoai = "";
+        let phanLoaiNgan = "";
+        let mauKetQua = "";
+        let loiKhuyenChinh = "";
+
+        if (bmi < 18.5) {
+          phanLoaiNgan = "Cân nặng thấp (Gầy)";
+          phanLoai = "Phân loại (" + gioiTinhDaChon + ", " + tuoiSo + " tuổi): Cân nặng thấp (Hơi gầy)";
+          mauKetQua = "#D97706";
+          loiKhuyenChinh = "Bạn nên bổ sung thêm đạm, canxi và ngủ đủ giấc để tăng cường sức đề kháng.";
+        } else if (bmi < 25.0) {
+          phanLoaiNgan = "Bình thường (Tốt)";
+          phanLoai = "Phân loại (" + gioiTinhDaChon + ", " + tuoiSo + " tuổi): Cân đối, Bình thường (Rất tốt)";
+          mauKetQua = "#15803D";
+          loiKhuyenChinh = "Chúc mừng bạn! Cơ thể bạn đang ở mức cân đối. Hãy duy trì ăn nhiều rau xanh và vận động đều đặn.";
+        } else if (bmi < 30.0) {
+          phanLoaiNgan = "Thừa cân";
+          phanLoai = "Phân loại (" + gioiTinhDaChon + ", " + tuoiSo + " tuổi): Thừa cân";
+          mauKetQua = "#C2410C";
+          loiKhuyenChinh = "Bạn nên giảm tinh bột, đồ ngọt, đi bộ 30 phút/ngày và giữ vòng eo " + vongEoKhuyenNghi + ".";
+        } else {
+          phanLoaiNgan = "Béo phì";
+          phanLoai = "Phân loại (" + gioiTinhDaChon + ", " + tuoiSo + " tuổi): Béo phì";
+          mauKetQua = "#B91C1C";
+          loiKhuyenChinh = "Bạn nên điều chỉnh chế độ ăn và khám sức khỏe định kỳ để bảo vệ tim mạch, xương khớp (giữ vòng eo " + vongEoKhuyenNghi + ").";
+        }
+
+        // Hiển thị thông tin khách và kết quả BMI
+        nhanThongTinKhach.textContent =
+          "👤 Người được tư vấn: " +
+          hoTen +
+          "  |  📞 SĐT: " +
+          soDienThoai +
+          "  |  📍 Địa chỉ: " +
+          diaChi;
+        nhanThongTinKhach.classList.remove("hidden");
+
+        nhanSoBMI.textContent = "Chỉ số BMI của bạn: " + bmi.toFixed(1);
+        nhanSoBMI.style.color = mauKetQua;
+        nhanPhanLoai.textContent = phanLoai;
+        nhanPhanLoai.style.color = mauKetQua;
+
+        khungThuocDo.classList.remove("hidden");
+        kimChiBMI.style.left = tinhViTriKim(bmi).toFixed(1) + "%";
+
+        doanLoiKhuyenChinh.textContent = loiKhuyenChinh;
+        danhSachChiTiet.innerHTML = "";
+
+        const mucCanNang = document.createElement("li");
+        mucCanNang.textContent =
+          "Mức cân nặng tốt cho chiều cao " +
+          chieuCaoCm.toFixed(0) +
+          " cm: từ " +
+          canNangToiThieu.toFixed(1) +
+          " kg đến " +
+          canNangToiDa.toFixed(1) +
+          " kg.";
+        danhSachChiTiet.appendChild(mucCanNang);
+
+        if (tuoiSo >= 18) {
+          const mucTyLeMo = document.createElement("li");
+          mucTyLeMo.textContent =
+            "Tỷ lệ mỡ cơ thể ước tính (" +
+            gioiTinhDaChon +
+            ", " +
+            tuoiSo +
+            " tuổi): khoảng " +
+            tyLeMo.toFixed(1) +
+            "%.";
+          danhSachChiTiet.appendChild(mucTyLeMo);
+        }
+
+        const mucVongEo = document.createElement("li");
+        mucVongEo.textContent =
+          "Khuyến nghị vòng eo an toàn cho " + gioiTinhDaChon + ": " + vongEoKhuyenNghi + ".";
+        danhSachChiTiet.appendChild(mucVongEo);
+
+        nhanLoiKhuyen.classList.remove("hidden");
+
+        // Bước 3: Tạo nội dung tư vấn chuyên sâu
+        datTrangThaiBuoc(3);
+        const noiDungBaMuc = taoNoiDungTuVan(bmi, tuoiSo, gioiTinhDaChon, canNang);
+        chonTabTuVan("tatca");
+        khungTuVanChuyenSau.classList.remove("hidden");
+
+        // Tạo đối tượng hồ sơ hiện tại
+        const thoiGianHienTai = new Date().toLocaleString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        hoSoHienTai = {
+          id: "hs_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+          thoiGian: thoiGianHienTai,
+          hoTen: hoTen,
+          soDienThoai: soDienThoai,
+          diaChi: diaChi,
+          gioiTinh: gioiTinhDaChon,
+          tuoi: tuoiSo,
+          chieuCaoCm: chieuCaoCm,
+          canNang: canNang,
+          bmi: bmi,
+          tyLeMo: tyLeMo,
+          canNangToiThieu: canNangToiThieu,
+          canNangToiDa: canNangToiDa,
+          phanLoaiNgan: phanLoaiNgan,
+          loiKhuyenChinh: loiKhuyenChinh,
+          tuVanDinhDuong: noiDungBaMuc.dinhDuong,
+          tuVanLuyenTap: noiDungBaMuc.luyenTap,
+          tuVanNghiNgoi: noiDungBaMuc.nghiNgoi,
+          phanTichAI: ""
+        };
+
+        // Bước 4 & 5: Chạy AI Nghiên cứu sâu & Tự động lưu vào danh sách
+        goiAIPhanTichSau(hoSoHienTai);
+        luuHoSoVaoDanhSach(hoSoHienTai, !laTuDong);
+        ghiNhatKyAI(
+          "Đã tự động phân tích & cập nhật hồ sơ \"" +
+            hoTen +
+            "\" (BMI " +
+            bmi.toFixed(1) +
+            " - " +
+            phanLoaiNgan +
+            ")."
+        );
+
+        if (!laTuDong) {
+          document.getElementById("theKetQua").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+
+      // Chế độ Tự động chạy mọi bước khi người dùng nhập đủ thông tin
+      function kichHoatTuDongNeuDu() {
+        if (!cheDoTuDong) return;
+        if (boDemTuDong) {
+          clearTimeout(boDemTuDong);
+        }
+        const duThongTinCoBan =
+          gioiTinhDaChon &&
+          oTuoi.value.trim() !== "" &&
+          oChieuCao.value.trim() !== "" &&
+          oCanNang.value.trim() !== "";
+        if (!duThongTinCoBan) return;
+
+        boDemTuDong = setTimeout(function () {
+          tinhBMI(true);
+        }, 650);
+      }
+
+      function xoaThongTin() {
+        if (boDemTuDong) clearTimeout(boDemTuDong);
+        oHoTen.value = "";
+        oSoDienThoai.value = "";
+        oDiaChi.value = "";
+        chonGioiTinh("");
+        oTuoi.value = "";
+        oChieuCao.value = "";
+        oCanNang.value = "";
+        hoSoHienTai = null;
+        xoaDanhDauLoi();
+
+        nhanThongTinKhach.classList.add("hidden");
+        nhanSoBMI.textContent = "Chỉ số BMI: --";
+        nhanSoBMI.style.color = "#102A43";
+        nhanPhanLoai.textContent =
+          "Mời bạn nhập thông tin người được tư vấn (chế độ Tự động sẽ chạy ngay khi đủ số liệu)";
+        nhanPhanLoai.style.color = "#486581";
+        khungThuocDo.classList.add("hidden");
+        nhanLoiKhuyen.classList.add("hidden");
+        khungTuVanChuyenSau.classList.add("hidden");
+        [buoc1, buoc2, buoc3, buoc4, buoc5].forEach(function (el) {
+          el.classList.remove("active-step", "done-step");
+        });
+        oHoTen.focus();
+      }
+
+      // --- Các hàm Xuất File (Excel CSV, Báo cáo HTML, JSON) ---
+      function taiXuongFile(tenFile, noiDung, loaiMime) {
+        const blob = new Blob([noiDung], { type: loaiMime });
+        const url = URL.createObjectURL(blob);
+        const theA = document.createElement("a");
+        theA.href = url;
+        theA.download = tenFile;
+        document.body.appendChild(theA);
+        theA.click();
+        document.body.removeChild(theA);
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
+
+      function thoatChuoiCSV(giaTri) {
+        const s = String(giaTri == null ? "" : giaTri).replace(/\r?\n/g, " ");
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+
+      function xuatFileExcelCSV() {
+        if (danhSachTuVan.length === 0) {
+          hienThiLoi(
+            "Danh sách đang trống",
+            "Hiện chưa có người được tư vấn nào trong danh sách.\nBạn hãy tính BMI cho ít nhất 1 người trước khi xuất file nhé!",
+            oHoTen
+          );
+          return;
+        }
+
+        const tieuDeCot = [
+          "STT",
+          "Thời gian tư vấn",
+          "Họ và tên người được tư vấn",
+          "Số điện thoại",
+          "Địa chỉ",
+          "Giới tính",
+          "Độ tuổi",
+          "Chiều cao (cm)",
+          "Cân nặng (kg)",
+          "Chỉ số BMI",
+          "Tỷ lệ mỡ ước tính (%)",
+          "Phân loại thể trạng",
+          "Cân nặng lý tưởng (kg)",
+          "Tư vấn dinh dưỡng",
+          "Chế độ luyện tập",
+          "Chế độ học tập & nghỉ ngơi"
+        ];
+
+        const cacDong = [tieuDeCot.map(thoatChuoiCSV).join(",")];
+
+        danhSachTuVan.forEach(function (item, idx) {
+          const dong = [
+            idx + 1,
+            item.thoiGian,
+            item.hoTen,
+            item.soDienThoai,
+            item.diaChi,
+            item.gioiTinh,
+            item.tuoi,
+            item.chieuCaoCm.toFixed(0),
+            item.canNang,
+            item.bmi.toFixed(1),
+            item.tyLeMo.toFixed(1),
+            item.phanLoaiNgan,
+            item.canNangToiThieu.toFixed(1) + " - " + item.canNangToiDa.toFixed(1),
+            item.tuVanDinhDuong,
+            item.tuVanLuyenTap,
+            item.tuVanNghiNgoi
+          ];
+          cacDong.push(dong.map(thoatChuoiCSV).join(","));
+        });
+
+        // Thêm BOM UTF-8 (\uFEFF) để mở trên Microsoft Excel Windows hiển thị chuẩn tiếng Việt
+        const noiDungCSV = "\uFEFF" + cacDong.join("\r\n");
+        const ngay = new Date().toISOString().slice(0, 10);
+        taiXuongFile(
+          "Danh_Sach_Tu_Van_BMI_V134_" + ngay + ".csv",
+          noiDungCSV,
+          "text/csv;charset=utf-8;"
+        );
+        hienThongBaoNhanh("Đã xuất file Excel (.CSV) gồm " + danhSachTuVan.length + " người được tư vấn!");
+      }
+
+      function xuatFileBaoCaoHTML() {
+        if (danhSachTuVan.length === 0) {
+          hienThiLoi(
+            "Danh sách đang trống",
+            "Hiện chưa có người được tư vấn nào trong danh sách để xuất báo cáo.",
+            oHoTen
+          );
+          return;
+        }
+
+        const ngayBaoCao = new Date().toLocaleString("vi-VN");
+        let hangBang = "";
+        danhSachTuVan.forEach(function (item, idx) {
+          hangBang +=
+            "<tr>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;text-align:center;font-weight:bold;'>" +
+            (idx + 1) +
+            "</td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;font-weight:bold;'>" +
+            item.hoTen +
+            "<br/><span style='font-size:12px;color:#64748b;font-weight:normal;'>" +
+            item.thoiGian +
+            "</span></td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;'>" +
+            item.soDienThoai +
+            "</td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;'>" +
+            item.diaChi +
+            "</td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;text-align:center;'>" +
+            item.gioiTinh +
+            " - " +
+            item.tuoi +
+            " tuổi<br/>" +
+            item.chieuCaoCm.toFixed(0) +
+            "cm / " +
+            item.canNang +
+            "kg</td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;text-align:center;font-weight:bold;'>BMI: " +
+            item.bmi.toFixed(1) +
+            "<br/>" +
+            item.phanLoaiNgan +
+            "</td>" +
+            "<td style='padding:10px;border:1px solid #cbd5e1;font-size:14px;'>" +
+            "<strong>• Dinh dưỡng:</strong> " +
+            item.tuVanDinhDuong +
+            "<br/><strong>• Luyện tập:</strong> " +
+            item.tuVanLuyenTap +
+            "<br/><strong>• Nghỉ ngơi:</strong> " +
+            item.tuVanNghiNgoi +
+            "</td>" +
+            "</tr>";
+        });
+
+        const htmlBaoCao =
+          "<!DOCTYPE html><html lang='vi'><head><meta charset='UTF-8'><title>Báo Cáo Tư Vấn Sức Khỏe BMI V134</title></head>" +
+          "<body style='font-family:Segoe UI,Arial,sans-serif;color:#102A43;padding:24px;line-height:1.5;'>" +
+          "<h1 style='color:#1E3A8A;margin-bottom:4px;'>BÁO CÁO TỔNG HỢP DANH SÁCH NGƯỜI ĐƯỢC TƯ VẤN SỨC KHỎE (BMI - V134)</h1>" +
+          "<p style='margin-top:0;color:#486581;font-size:16px;'>Ngày xuất báo cáo: " +
+          ngayBaoCao +
+          " | Tổng số hồ sơ: <strong>" +
+          danhSachTuVan.length +
+          " người</strong></p>" +
+          "<table style='width:100%;border-collapse:collapse;margin-top:16px;font-size:15px;'>" +
+          "<thead><tr style='background:#1E3A8A;color:#ffffff;'>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>STT</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Họ và Tên</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Số Điện Thoại</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Địa Chỉ</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Thông Số</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Kết Quả BMI</th>" +
+          "<th style='padding:10px;border:1px solid #cbd5e1;'>Phác Đồ Tư Vấn (Dinh dưỡng, Luyện tập, Nghỉ ngơi)</th>" +
+          "</tr></thead><tbody>" +
+          hangBang +
+          "</tbody></table></body></html>";
+
+        const ngay = new Date().toISOString().slice(0, 10);
+        taiXuongFile(
+          "Bao_Cao_Tu_Van_BMI_V134_" + ngay + ".html",
+          htmlBaoCao,
+          "text/html;charset=utf-8;"
+        );
+        hienThongBaoNhanh("Đã xuất file Báo cáo (.HTML) để in hoặc gửi cho khách hàng!");
+      }
+
+      function xuatFileJSON() {
+        if (danhSachTuVan.length === 0) {
+          hienThiLoi(
+            "Danh sách đang trống",
+            "Hiện chưa có hồ sơ nào để sao lưu file JSON.",
+            oHoTen
+          );
+          return;
+        }
+        const duLieuXuat = {
+          phienBan: "V134",
+          ngayXuat: new Date().toISOString(),
+          tongSoNguoi: danhSachTuVan.length,
+          boNhoTuHocAI: boNhoTuHocAI,
+          danhSachNguoiDuocTuVan: danhSachTuVan
+        };
+        const ngay = new Date().toISOString().slice(0, 10);
+        taiXuongFile(
+          "Sao_Luu_Ho_So_BMI_V134_" + ngay + ".json",
+          JSON.stringify(duLieuXuat, null, 2),
+          "application/json;charset=utf-8;"
+        );
+        hienThongBaoNhanh("Đã xuất file Sao lưu (.JSON) thành công!");
+      }
+
+      // --- Gắn sự kiện cho mọi nút bấm và ô nhập ---
+      nutCheDoTuDong.addEventListener("click", function () {
+        cheDoTuDong = !cheDoTuDong;
+        nutCheDoTuDong.setAttribute("aria-pressed", String(cheDoTuDong));
+        if (cheDoTuDong) {
+          nutCheDoTuDong.className =
+            "bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-2 cursor-pointer transition border-2 border-white/30";
+          nhanCheDoTuDong.textContent = "AI Tự Động Mọi Bước: ĐANG BẬT";
+          ghiNhatKyAI("Đã BẬT chế độ AI Tự động chạy mọi bước.");
+          kichHoatTuDongNeuDu();
+        } else {
+          nutCheDoTuDong.className =
+            "bg-slate-600 hover:bg-slate-700 text-white font-bold text-[15px] px-4 py-2.5 rounded-xl shadow flex items-center gap-2 cursor-pointer transition border-2 border-white/30";
+          nhanCheDoTuDong.textContent = "AI Tự Động Mọi Bước: ĐANG TẮT";
+          ghiNhatKyAI("Đã TẮT chế độ tự động (chỉ tính khi nhấn nút).");
+        }
+      });
+
+      nutMoCaiDatAI.addEventListener("click", function () {
+        khungCaiDatAI.classList.toggle("hidden");
+      });
+
+      nutDongCaiDatAI.addEventListener("click", function () {
+        khungCaiDatAI.classList.add("hidden");
+      });
+
+      nutHienAnKey.addEventListener("click", function () {
+        const laPassword = oDeepSeekKey.type === "password";
+        oDeepSeekKey.type = laPassword ? "text" : "password";
+        oGeminiKey.type = laPassword ? "text" : "password";
+      });
+
+      nutLuuAPI.addEventListener("click", function () {
+        cauHinhAPI.deepseekKey = oDeepSeekKey.value.trim();
+        cauHinhAPI.geminiKey = oGeminiKey.value.trim();
+        luuDuLieuLuuTru();
+        capNhatTrangThaiAPI();
+        hienThongBaoNhanh("Đã lưu cấu hình API Key (Ưu tiên DeepSeek -> Gemini)!");
+        if (hoSoHienTai) {
+          goiAIPhanTichSau(hoSoHienTai);
+        }
+      });
+
+      nutMauThu.addEventListener("click", function () {
+        const cacMau = [
+          {
+            hoTen: "Nguyễn Thị Hòa",
+            sdt: "0912456789",
+            diaChi: "Xuân Giang, Tuyên Quang",
+            gioiTinh: "Nữ",
+            tuoi: "46",
+            cao: "158",
+            nang: "63"
+          },
+          {
+            hoTen: "Trần Văn Minh",
+            sdt: "0987654321",
+            diaChi: "TP. Tuyên Quang",
+            gioiTinh: "Nam",
+            tuoi: "52",
+            cao: "168",
+            nang: "65"
+          },
+          {
+            hoTen: "Lê Hoàng Nam",
+            sdt: "0903112233",
+            diaChi: "Hàm Yên, Tuyên Quang",
+            gioiTinh: "Nam",
+            tuoi: "39",
+            cao: "170",
+            nang: "78"
+          }
+        ];
+        const mau = cacMau[danhSachTuVan.length % cacMau.length];
+        oHoTen.value = mau.hoTen;
+        oSoDienThoai.value = mau.sdt;
+        oDiaChi.value = mau.diaChi;
+        oTuoi.value = mau.tuoi;
+        oChieuCao.value = mau.cao;
+        oCanNang.value = mau.nang;
+        chonGioiTinh(mau.gioiTinh);
+        tinhBMI(false);
+      });
+
+      nutChonNam.addEventListener("click", function () {
+        chonGioiTinh("Nam");
+      });
+
+      nutChonNu.addEventListener("click", function () {
+        chonGioiTinh("Nữ");
+      });
+
+      nutTinhBMI.addEventListener("click", function () {
+        tinhBMI(false);
+      });
+
+      nutLuuHoSoRieng.addEventListener("click", function () {
+        tinhBMI(false);
+      });
+
+      nutNhapLai.addEventListener("click", xoaThongTin);
+
+      nutDongCanhBao.addEventListener("click", function () {
+        hopCanhBao.classList.add("hidden");
+      });
+
+      nutDongThongBaoNhanh.addEventListener("click", function () {
+        hopThongBaoNhanh.classList.add("hidden");
+      });
+
+      nutPhanTichAI.addEventListener("click", function () {
+        if (!hoSoHienTai) {
+          tinhBMI(false);
+          return;
+        }
+        chonTabTuVan("aichuyensau");
+        goiAIPhanTichSau(hoSoHienTai);
+      });
+
+      nutDanhGiaTotAI.addEventListener("click", function () {
+        boNhoTuHocAI.soLanTuHoc += 1;
+        boNhoTuHocAI.diemChatLuong += 5;
+        luuDuLieuLuuTru();
+        capNhatTrungTamAITuHoc();
+        ghiNhatKyAI("Người tư vấn xác nhận phác đồ chuẩn xác (+5 điểm tối ưu hóa thuật toán V134).");
+        hienThongBaoNhanh("Cảm ơn bạn! AI V134 đã ghi nhận đánh giá tốt và nâng cấp trọng số tư vấn.");
+      });
+
+      nutDayAI.addEventListener("click", function () {
+        const kinhNghiemMoi = oDayAI.value.trim();
+        if (!kinhNghiemMoi) {
+          hienThiLoi(
+            "Chưa nhập nội dung dạy AI",
+            "Bạn hãy nhập một kinh nghiệm tư vấn thực tế vào ô trước khi bấm nút Dạy AI Ghi Nhớ nhé!",
+            oDayAI
+          );
+          return;
+        }
+        boNhoTuHocAI.kinhNghiemBoSung.push(kinhNghiemMoi);
+        boNhoTuHocAI.soLanTuHoc += 1;
+        boNhoTuHocAI.diemChatLuong += 10;
+        oDayAI.value = "";
+        luuDuLieuLuuTru();
+        capNhatTrungTamAITuHoc();
+        ghiNhatKyAI("AI V134 đã học thêm kinh nghiệm mới: \"" + kinhNghiemMoi + "\"");
+        hienThongBaoNhanh("AI V134 đã ghi nhớ kinh nghiệm mới và áp dụng ngay cho các ca tư vấn!");
+        if (hoSoHienTai) {
+          goiAIPhanTichSau(hoSoHienTai);
+        }
+      });
+
+      tabTatCa.addEventListener("click", function () {
+        chonTabTuVan("tatca");
+      });
+      tabDinhDuong.addEventListener("click", function () {
+        chonTabTuVan("dinhduong");
+      });
+      tabLuyenTap.addEventListener("click", function () {
+        chonTabTuVan("luyentap");
+      });
+      tabNghiNgoi.addEventListener("click", function () {
+        chonTabTuVan("nghingoi");
+      });
+      tabAIChuyenSau.addEventListener("click", function () {
+        chonTabTuVan("aichuyensau");
+      });
+
+      nutXuatExcel.addEventListener("click", xuatFileExcelCSV);
+      nutXuatBaoCaoHTML.addEventListener("click", xuatFileBaoCaoHTML);
+      nutXuatJSON.addEventListener("click", xuatFileJSON);
+
+      oTimKiemKhach.addEventListener("input", veBangDanhSach);
+
+      nutXoaDanhSach.addEventListener("click", function () {
+        if (danhSachTuVan.length === 0) {
+          hienThongBaoNhanh("Danh sách hiện đang trống.");
+          return;
+        }
+        hopXacNhanXoa.classList.remove("hidden");
+      });
+
+      nutDongYXoaHet.addEventListener("click", function () {
+        danhSachTuVan = [];
+        luuDuLieuLuuTru();
+        veBangDanhSach();
+        hopXacNhanXoa.classList.add("hidden");
+        hienThongBaoNhanh("Đã xóa toàn bộ danh sách người được tư vấn.");
+      });
+
+      nutHuyXoaHet.addEventListener("click", function () {
+        hopXacNhanXoa.classList.add("hidden");
+      });
+
+      // Ủy quyền sự kiện (Event Delegation) cho nút Xem lại & Xóa từng người trong bảng
+      bangDanhSachBody.addEventListener("click", function (e) {
+        const nut = e.target.closest("button[data-action]");
+        if (!nut) return;
+        const hanhDong = nut.getAttribute("data-action");
+        const idHoSo = nut.getAttribute("data-id");
+
+        if (hanhDong === "delete") {
+          danhSachTuVan = danhSachTuVan.filter(function (x) {
+            return x.id !== idHoSo;
+          });
+          luuDuLieuLuuTru();
+          veBangDanhSach();
+          hienThongBaoNhanh("Đã xóa 1 hồ sơ khỏi danh sách.");
+        } else if (hanhDong === "view") {
+          const hs = danhSachTuVan.find(function (x) {
+            return x.id === idHoSo;
+          });
+          if (!hs) return;
+          oHoTen.value = hs.hoTen;
+          oSoDienThoai.value = hs.soDienThoai === "Chưa ghi" ? "" : hs.soDienThoai;
+          oDiaChi.value = hs.diaChi === "Chưa ghi" ? "" : hs.diaChi;
+          oTuoi.value = String(hs.tuoi);
+          oChieuCao.value = String(hs.chieuCaoCm.toFixed(0));
+          oCanNang.value = String(hs.canNang);
+          chonGioiTinh(hs.gioiTinh);
+          tinhBMI(false);
+        }
+      });
+
+      // Tự động chạy khi người dùng nhập liệu hoặc nhấn Enter
+      [oHoTen, oSoDienThoai, oDiaChi, oTuoi, oChieuCao, oCanNang].forEach(function (inputEl) {
+        inputEl.addEventListener("input", function () {
+          kichHoatTuDongNeuDu();
+        });
+        inputEl.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            tinhBMI(false);
+          }
+        });
+      });
+
+      // Khởi tạo dữ liệu khi mở ứng dụng
+      taiDuLieuLuuTru();
+      veBangDanhSach();
+    })();
+  </script>
+</body>
+</html>
